@@ -1,0 +1,18 @@
+language: cpp
+
+before_install:
+- echo $NODE_VERSION
+# upgrade nvm
+- rm -rf ~/.nvm/ && git clone --depth 1 https://github.com/creationix/nvm.git ~/.nvm
+- source ~/.nvm/nvm.sh
+- nvm install 0.10.35
+- nvm use 0.10.35
+
+install:
+- npm install
+
+before_script:
+- wget https://springmeyer.s3.amazonaws.com/90-50-7.tif
+
+script:
+- node test.js 90-50-7.tif --noop
