@@ -13,6 +13,8 @@ This benchmark provides a testcase to start asking the questions like:
 
 > Is the block cache in GDAL helping performance overall? Can the mutex locks used in the cache be tuned to further improve performance?
 
+[![Build Status](https://travis-ci.org/mapbox/gdal-tiling-bench.svg?branch=master)](https://travis-ci.org/mapbox/gdal-tiling-bench)
+[![Build status](https://ci.appveyor.com/api/projects/status/pky11t4tir94xnm4?svg=true)](https://ci.appveyor.com/project/Mapbox/gdal-tiling-bench)
 
 ### Background
 
