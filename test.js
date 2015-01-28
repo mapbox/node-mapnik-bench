@@ -141,7 +141,7 @@ tilelive.info(source, function(err, info) {
                 console.log('Result -> tiles per second: ' + tile_count/elapsed);
                 console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
             }
-            process.exit(0);
+            console.log('Test is done: process will exit once tilelive-bridge map pool is automatically reaped');
         }       
     });
 });
