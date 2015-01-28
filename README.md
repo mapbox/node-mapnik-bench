@@ -140,5 +140,6 @@ cd ../../gdal-tiling-bench
 To run the benchmark do:
 
 ```sh
+wget https://springmeyer.s3.amazonaws.com/90-50-7.tif
 node test.js 90-50-7.tif --noop
 ```
