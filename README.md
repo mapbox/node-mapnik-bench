@@ -5,7 +5,9 @@ This benchmark provides a testcase to start asking the questions like:
 
 > How does GDAL perform when being ask, via multiple threads, to read from a GeoTIFF?
 
-> At what point do more threads help performance or hurt it?
+> Are there any bottlenecks or optimizations that can be made to Mapnik's use of GDAL in gdal.input?
+
+> At what point do more threads help performance or hurt it and does this vary predictably by zoom level?
 
 > Does the the asynchronous tile requests, which result in non-deterministic order of bbox's passed to RasterIO, have a negative impact on file-system level caching or GDAL's block cache?
 
@@ -109,15 +111,28 @@ git clone git@github.com:mapnik/mapnik.git
 JOBS=$(nproc) make
 sudo make install
 cd ../
+# install node.js
+git clone git@github.com:creationix/nvm.git ~/.nvm
+source ~/.nvm/nvm.sh
+nvm install 0.10.35
 git clone git@github.com:mapbox/gdal-tiling-bench.git
 cd gdal-tiling-bench
-npm install --build-from-source
+npm install mapnik --build-from-source --loglevel=verbose
 ```
 
 6) Finally, install the rest of the pure Javascript dependencies of the benchmark:
 
 ```sh
 npm install
+```
+
+If changes to GDAL or Mapnik are made that change ABI then rebuild node-mapnik like:
+
+```sh
+cd ~/gdal/gdal
+make install
+cd ../../gdal-tiling-bench
+./node_modules/mapnik/node_modules/.bin/node-pre-gyp build -C ./node_modules/mapnik/
 ```
 
 ### Running Benchmark
@@ -127,7 +142,3 @@ To run the benchmark do:
 ```sh
 node test.js 90-50-7.tif --noop
 ```
-
-
-
-
