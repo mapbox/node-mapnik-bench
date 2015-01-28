@@ -9,7 +9,7 @@ This benchmark provides a testcase to start asking the questions like:
 
 > At what point do more threads help performance or hurt it and does this vary predictably by zoom level?
 
-> Does the the asynchronous tile requests, which result in non-deterministic order of bbox's passed to RasterIO, have a negative impact on file-system level caching or GDAL's block cache?
+> Do the asynchronous tile requests made by tilelive, which result in non-deterministic order of bbox's passed to RasterIO, have a negative impact on file-system level caching or GDAL's block cache?
 
 > Is the block cache in GDAL helping performance overall? Can the mutex locks used in the cache be tuned to further improve performance?
 
@@ -21,8 +21,9 @@ This benchmark uses:
 
 - Node.js to talk to Mapnik (via node-mapnik c++ bindings)
 - Mapnik to request raster pixels for a given tile from the Mapnik "gdal.input" plugin (shared so)
-- Then "gdal.input" is linked to libgdal and uses the C++ API
-- Once GDAL returns pixels for a given bbox request then Mapnik is used to scale the image down to 512x512 and encode as webp
+- The "gdal.input" is linked to libgdal and uses the GDAL C++ API
+- Oversampling ratio of 2x is used.
+- Once GDAL returns pixels for a given bbox request then Mapnik is used to scale the image down (bilinear) to 512x512 and encode as webp
 
 ### Setup
 
@@ -30,7 +31,7 @@ There are two ways to install the dependencies for this benchmark.
 
 #### From binaries
 
-To easily install from binaries do:
+To install from binaries do:
 
 ```sh
 npm install
@@ -42,11 +43,11 @@ This will install Mapnik 3.x at 8063fa0 and all dependencies (including GDAL hea
 
 To enable running the benchmark against a custom Mapnik or GDAL:
 
-1) Install libtiff 4.x from source, plus other system packages
-2) Install GDAL from source ensuring external libtiff is linked
-3) Install Mapnik from source, ensuring external libtiff is the same as GDAL used (otherwise crashes are likely)
-4) Install libprotobuf so that `protoc` is on your PATH and libprotobuf-lite is available at a common location or on LD_LIBRARY_PATH
-5) Build node-mapnik from source:
+- Install libtiff 4.x from source, plus other system packages
+- Install GDAL from source ensuring external libtiff is linked
+- Install Mapnik from source, ensuring external libtiff is the same as GDAL used (otherwise crashes are likely)
+- Install libprotobuf so that `protoc` is on your PATH and libprotobuf-lite is available at a common location or on LD_LIBRARY_PATH
+- Build node-mapnik from source:
 
 ```sh
 npm install mapnik --build-from-source
@@ -120,7 +121,7 @@ cd gdal-tiling-bench
 npm install mapnik --build-from-source --loglevel=verbose
 ```
 
-6) Finally, install the rest of the pure Javascript dependencies of the benchmark:
+Finally, install the rest of the pure Javascript dependencies of the benchmark:
 
 ```sh
 npm install
