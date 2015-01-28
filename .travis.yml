@@ -1,5 +1,7 @@
 language: cpp
 
+sudo: false
+
 before_install:
 - echo $NODE_VERSION
 # upgrade nvm
@@ -7,6 +9,8 @@ before_install:
 - source ~/.nvm/nvm.sh
 - nvm install 0.10.35
 - nvm use 0.10.35
+# install c++11 capable libstdc++ without sudo
+- if [[ $(uname -s) == 'Linux' ]]; then wget https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test/+files/libstdc%2B%2B6_4.8.1-2ubuntu1~12.04_amd64.deb && dpkg -x libstdc++6_4.8.1-2ubuntu1~12.04_amd64.deb ./ && export LD_PRELOAD=$(pwd)/usr/lib/x86_64-linux-gnu/libstdc++.so.6; fi
 
 install:
 - npm install
