@@ -18,7 +18,7 @@ function usage() {
         'options:',
         '  --threadpool=N',
         '  --minzoom=N',
-        '  --maxzoom=N',       
+        '  --maxzoom=N',
         '  --bounds=minx,miny,maxx,maxy',
         '  --noop (write to nothing)',
         '  --verbose (when using --noop print tiles as they are finished rendering)'
@@ -112,7 +112,12 @@ if (!argv.noop) {
     tilelive.protocols['noop:'] = NOOP;
 }
 
+function report(stats, p) {
+    console.log(p.percentage.toFixed(1) + '%, done:' + stats.done + ', skipped:' + stats.skipped + ', transferred:', p.transferred + ', remaining:' + p.remaining);
+}
+
 tilelive.info(source, function(err, info) {
+    console.log(info);
     if (err) {
       throw err;
     }
@@ -122,6 +127,7 @@ tilelive.info(source, function(err, info) {
     options.maxzoom = argv.maxzoom || info.maxzoom;
     options.bounds = argv.bounds || info.bounds;
     options.type = argv.scheme || 'pyramid';
+    if (!argv.noop) { options.progress = report; }
     console.log('Config -> source options:',JSON.stringify(options));
     console.log('Config -> threadpool size:',process.env.UV_THREADPOOL_SIZE);
     console.log('Config -> sink:',sink);
@@ -142,6 +148,6 @@ tilelive.info(source, function(err, info) {
                 console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
             }
             console.log('Test is done: process will exit once tilelive-bridge map pool is automatically reaped');
-        }       
+        }
     });
 });
