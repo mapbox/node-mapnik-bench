@@ -135,7 +135,12 @@ tilelive.info(source, function(err, info) {
         var mem = process.memoryUsage();
         if (mem.rss > stats.max_rss) stats.max_rss = mem.rss;
         if (mem.heapUsed > stats.max_heap) stats.max_heap = mem.heapUsed;
-        process.stdout.write('\r\033[KMemory -> peak rss: ' + bytes(stats.max_rss) + ' / peak heap: ' + bytes(stats.max_heap));
+        var line = 'Memory -> peak rss: ' + bytes(stats.max_rss) + ' / peak heap: ' + bytes(stats.max_heap);
+        if (process.platform === 'win32') {
+            process.stdout.write('\033[0G'+line);
+        } else {
+            process.stdout.write('\r'+line);
+        }
     },1000);
 
     var start = new Date().getTime() / 1000;
