@@ -24,10 +24,11 @@ install:
   - npm install
   - cd testcases/L7/
   - ps: Start-FileDownload https://springmeyer.s3.amazonaws.com/LE70460262003149EDC00-RGB.tif
-  - cd ../../mapnik-versions/v3.2.0
+  - cd ../../
+  - cd mapnik-versions/v3.2.0
   - npm install
   - cd ../../
-  - cd ../../mapnik-versions/v3.4.0
+  - cd mapnik-versions/v3.4.0
   - npm install
   - cd ../../
   - node test.js testcases/L7/map.xml mapnik-versions/v3.2.0/
