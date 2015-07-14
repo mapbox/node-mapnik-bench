@@ -2,21 +2,27 @@ language: cpp
 
 sudo: false
 
+addons:
+  apt:
+    sources:
+     - ubuntu-toolchain-r-test
+    packages:
+     - libstdc++6 # upgrade libstdc++ on linux to support C++11
+
 before_install:
 - echo $NODE_VERSION
 # upgrade nvm
 - rm -rf ~/.nvm/ && git clone --depth 1 https://github.com/creationix/nvm.git ~/.nvm
 - source ~/.nvm/nvm.sh
-- nvm install 0.10.35
-- nvm use 0.10.35
-# install c++11 capable libstdc++ without sudo
-- if [[ $(uname -s) == 'Linux' ]]; then wget https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test/+files/libstdc%2B%2B6_4.8.1-2ubuntu1~12.04_amd64.deb && dpkg -x libstdc++6_4.8.1-2ubuntu1~12.04_amd64.deb ./ && export LD_PRELOAD=$(pwd)/usr/lib/x86_64-linux-gnu/libstdc++.so.6; fi
+- nvm install 0.10.40
+- nvm use 0.10.40
 
 install:
-- npm install
+- ./install.sh
 
 before_script:
-- wget https://springmeyer.s3.amazonaws.com/90-50-7.tif
+- ./testcases/L7/setup.sh
 
 script:
-- node test.js 90-50-7.tif --noop
+- node test.js testcases/L7/map.xml mapnik-versions/v3.2.0/
+- node test.js testcases/L7/map.xml mapnik-versions/v3.4.0/

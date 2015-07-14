@@ -1,0 +1,9 @@
+{
+  "name": "gdal-tiling-bench-version",
+  "version": "1.0.0",
+  "main": "package.json",
+  "dependencies": {
+    "mapnik": "3.4.0",
+    "tilelive-bridge":"git://github.com/mapbox/tilelive-bridge.git#mapnik-3.4.0"
+  }
+}

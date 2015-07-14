@@ -1,8 +1,9 @@
 
-var minimist = require('minimist')
+var minimist = require('minimist');
 var mkdirp = require('mkdirp');
 var path = require('path');
 var fs = require('fs');
+var bytes = require('bytes');
 
 function usage() {
     console.log([
@@ -10,25 +11,22 @@ function usage() {
         'usage:',
         '',
         '  Write tiles to directory:',
-        '    node test.js <path to tiff> <path to output tile directory>',
-        '',
-        '  Write tiles to nowhere (just generate them):',
-        '    node test.js <path to tiff> --noop',
+        '    node test.js <path to xml> <path to dir with mapnik+tilelive-bridge>',
         '',
         'options:',
         '  --threadpool=N',
         '  --minzoom=N',
         '  --maxzoom=N',       
         '  --bounds=minx,miny,maxx,maxy',
-        '  --noop (write to nothing)',
-        '  --verbose (when using --noop print tiles as they are finished rendering)'
+        '  --write-to (write tiles to directory)',
+        '  --verbose (print tiles as they are finished rendering)'
         ].join('\n'));
     process.exit(1);
 }
 
 var argv = minimist(process.argv.slice(2));
 
-if ((argv._.length == 1 && !argv.noop) && argv._.length < 2) {
+if (argv._.length < 2) {
     return usage();
 }
 
@@ -39,38 +37,39 @@ if (argv.threadpool) {
     process.env.UV_THREADPOOL_SIZE = Math.ceil(Math.max(4, require('os').cpus().length * 1.5));
 }
 
-var tiff = argv._[0];
+var xml_map_path = argv._[0];
 
-if (!fs.existsSync(tiff)) {
-    console.log('file does not exist',tiff);
+if (!fs.existsSync(xml_map_path)) {
+    console.log('file does not exist',xml_map_path);
     process.exit(1)
 }
 
+xml_map_path = path.resolve(xml_map_path);
+
+var submodules_directory = path.join(argv._[1],'node_modules');
+
+if (!fs.existsSync(submodules_directory)) {
+    console.log('file does not exist',submodules_directory);
+    process.exit(1)
+}
+
+submodules_directory = path.resolve(submodules_directory);
 
 var tilelive = require('tilelive');
-var Bridge = require('tilelive-bridge');
 var File = require('tilelive-file');
-var mercator = new(require('sphericalmercator'))()
+var Bridge = require(path.join(submodules_directory,'tilelive-bridge'));
 
-Bridge.registerProtocols(tilelive);
 File.registerProtocols(tilelive);
-
-var xml_template_path = path.join(__dirname,'map-template.xml');
-var xml_map_path = path.join(__dirname,'map.xml');
-var xml = fs.writeFileSync(xml_map_path,fs.readFileSync(xml_template_path).toString("utf-8").replace('{{file}}',tiff));
-
+Bridge.registerProtocols(tilelive);
 var source = 'bridge://'+xml_map_path;
+
+var mercator = new(require('sphericalmercator'))()
 
 var sink;
 
-
-if (!argv.noop) {
-    var output = argv._[1];
-    if (!output) {
-        console.log("please pass a directory to write tiles to (or pass --noop flag to write to nowhere)");
-    }
-    mkdirp.sync(output)
-    sink = 'file://' + path.join(__dirname,output+'?filetype=webp');
+if (argv.output) {
+    mkdirp.sync(argv.output)
+    sink = 'file://' + path.join(__dirname,argv.output+'?filetype=webp');
 } else {
     sink = 'noop://';
 
@@ -116,15 +115,28 @@ tilelive.info(source, function(err, info) {
     if (err) {
       throw err;
     }
-    var options = {};
+    var options = { close: true };
     if (argv.bounds) argv.bounds = argv.bounds.split(',').map(Number);
     options.minzoom = argv.minzoom || info.minzoom;
     options.maxzoom = argv.maxzoom || info.maxzoom;
     options.bounds = argv.bounds || info.bounds;
     options.type = argv.scheme || 'pyramid';
+    console.log('')
     console.log('Config -> source options:',JSON.stringify(options));
     console.log('Config -> threadpool size:',process.env.UV_THREADPOOL_SIZE);
     console.log('Config -> sink:',sink);
+
+    var stats = {
+        max_rss:0,
+        max_heap:0
+    }
+
+    var memcheck = setInterval(function() {
+        var mem = process.memoryUsage();
+        if (mem.rss > stats.max_rss) stats.max_rss = mem.rss;
+        if (mem.heapUsed > stats.max_heap) stats.max_heap = mem.heapUsed;
+        process.stdout.write('\r\033[KMemory -> peak rss: ' + bytes(stats.max_rss) + ' / peak heap: ' + bytes(stats.max_heap));
+    },1000);
 
     var start = new Date().getTime() / 1000;
     tilelive.copy(source, sink, options, function(err) {
@@ -141,7 +153,8 @@ tilelive.info(source, function(err, info) {
                 console.log('Result -> tiles per second: ' + tile_count/elapsed);
                 console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
             }
-            console.log('Test is done: process will exit once tilelive-bridge map pool is automatically reaped');
+            clearInterval(memcheck);
+            console.log('Test is done: process will exit once map pool is automatically reaped');
         }       
     });
 });

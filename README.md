@@ -1,7 +1,34 @@
 
 ## GDAL / Node.js tiling benchmark
 
-This benchmark provides a testcase to start asking the questions like:
+### Setup
+
+To install files needed for the benchmark do:
+
+```sh
+./install.sh
+```
+
+This will install some basic node.js deps into `./node_modules` and it will install node-mapnik binaries + related tilelive modules into the `./mapnik-versions` directory. See [Source compile](#Source compile) below for details of how to install a different node-mapnik version from source.
+
+### Running Benchmark
+
+To run the benchmark:
+
+1) Setup a testcase
+
+2) Run `node test.js <path to testcase> <path to mapnik version directory>`
+
+For example:
+
+```sh
+./testcases/90-50-7/setup.sh
+node test.js testcases/90-50-7/map.xml mapnik-versions/v3.1.6
+```
+
+### Background
+
+This benchmark provides a testcases to start asking the questions like:
 
 > How does GDAL perform when being ask, via multiple threads, to read from a GeoTIFF?
 
@@ -16,30 +43,13 @@ This benchmark provides a testcase to start asking the questions like:
 [![Build Status](https://travis-ci.org/mapbox/gdal-tiling-bench.svg?branch=master)](https://travis-ci.org/mapbox/gdal-tiling-bench)
 [![Build status](https://ci.appveyor.com/api/projects/status/pky11t4tir94xnm4?svg=true)](https://ci.appveyor.com/project/Mapbox/gdal-tiling-bench)
 
-### Background
-
 This benchmark uses:
-
 
 - Node.js to talk to Mapnik (via node-mapnik c++ bindings)
 - Mapnik to request raster pixels for a given tile from the Mapnik "gdal.input" plugin (shared so)
 - The "gdal.input" is linked to libgdal and uses the GDAL C++ API
-- Oversampling ratio of 2x is used.
+- Oversampling ratio of 1x is used.
 - Once GDAL returns pixels for a given bbox request then Mapnik is used to scale the image down (bilinear) to 512x512 and encode as webp
-
-### Setup
-
-There are two ways to install the dependencies for this benchmark.
-
-#### From binaries
-
-To install from binaries do:
-
-```sh
-npm install
-```
-
-This will install Mapnik 3.x at 8063fa0 and all dependencies (including GDAL head at 0334c2bed9) bundled inside the latest binary node-mapnik package.
 
 #### Source compile
 
@@ -136,13 +146,4 @@ cd ~/gdal/gdal
 make install
 cd ../../gdal-tiling-bench
 ./node_modules/mapnik/node_modules/.bin/node-pre-gyp build -C ./node_modules/mapnik/
-```
-
-### Running Benchmark
-
-To run the benchmark do:
-
-```sh
-wget https://springmeyer.s3.amazonaws.com/90-50-7.tif
-node test.js 90-50-7.tif --noop
 ```
