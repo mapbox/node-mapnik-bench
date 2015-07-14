@@ -21,9 +21,17 @@ install:
   - powershell Write-Output "https://mapbox.s3.amazonaws.com/node-cpp11/vcredist_$env:platform.exe"
   - powershell Start-FileDownload "https://mapbox.s3.amazonaws.com/node-cpp11/vcredist_$env:platform.exe"
   - .\vcredist_%platform%.exe /q /norestart
-  - ps: Start-FileDownload https://springmeyer.s3.amazonaws.com/90-50-7.tif
   - npm install
-  - node test.js 90-50-7.tif --noop
+  - cd testcases/L7/
+  - ps: Start-FileDownload https://springmeyer.s3.amazonaws.com/LE70460262003149EDC00-RGB.tif
+  - cd ../../mapnik-versions/v3.2.0
+  - npm install
+  - cd ../../
+  - cd ../../mapnik-versions/v3.4.0
+  - npm install
+  - cd ../../
+  - node test.js testcases/L7/map.xml mapnik-versions/v3.2.0/
+  - node test.js testcases/L7/map.xml mapnik-versions/v3.4.0/
 
 build: off
 test: off
