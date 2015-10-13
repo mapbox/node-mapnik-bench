@@ -26,5 +26,5 @@ before_script:
 script:
 - node test.js testcases/90-50-7/map.xml mapnik-versions/v3.2.0/
 - node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
-- GTIFF_DIRECT_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
-- GTIFF_VIRTUAL_MEM_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
+- export GTIFF_DIRECT_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
+- export export GTIFF_DIRECT_IO=NO && export GTIFF_VIRTUAL_MEM_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
