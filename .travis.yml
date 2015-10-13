@@ -24,7 +24,7 @@ before_script:
 - ./testcases/90-50-7/setup.sh
 
 script:
-- node test.js testcases/90-50-7/map.xml mapnik-versions/v3.2.0/
-- node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
-- export GTIFF_DIRECT_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
-- export export GTIFF_DIRECT_IO=NO && export GTIFF_VIRTUAL_MEM_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
+- node test.js testcases/90-50-7/map.xml mapnik-versions/v3.2.0/ --null-bridge --threadpool=8
+- node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/ --null-bridge --threadpool=8
+- export GTIFF_DIRECT_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/ --null-bridge --threadpool=8
+- export GTIFF_DIRECT_IO=NO && export GTIFF_VIRTUAL_MEM_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/ --null-bridge --threadpool=8
