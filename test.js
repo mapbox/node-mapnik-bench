@@ -14,6 +14,7 @@ function usage() {
         '    node test.js <path to xml> <path to dir with mapnik+tilelive-bridge>',
         '',
         'options:',
+        '  --null-bridge',
         '  --threadpool=N',
         '  --minzoom=N',
         '  --maxzoom=N',       
@@ -57,7 +58,14 @@ submodules_directory = path.resolve(submodules_directory);
 
 var tilelive = require('tilelive');
 var File = require('tilelive-file');
-var Bridge = require(path.join(submodules_directory,'tilelive-bridge'));
+
+if (argv['null-bridge']) {
+    // fake bridge that loads XML, but only renders and does not encode to image
+    var Bridge = require('./null-bridge')(submodules_directory);
+} else {
+    // normal tilelive-bridge that defaults to encoding rasters as webp (which is expensive)
+    var Bridge = require(path.join(submodules_directory,'tilelive-bridge'));
+}
 
 File.registerProtocols(tilelive);
 Bridge.registerProtocols(tilelive);

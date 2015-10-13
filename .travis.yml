@@ -21,8 +21,10 @@ install:
 - ./install.sh
 
 before_script:
-- ./testcases/L7/setup.sh
+- ./testcases/90-50-7/setup.sh
 
 script:
-- node test.js testcases/L7/map.xml mapnik-versions/v3.2.0/
-- node test.js testcases/L7/map.xml mapnik-versions/v3.4.0/
+- node test.js testcases/90-50-7/map.xml mapnik-versions/v3.2.0/
+- node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
+- GTIFF_DIRECT_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/
+- GTIFF_VIRTUAL_MEM_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/

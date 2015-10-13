@@ -1,6 +1,8 @@
 
 ## GDAL / Node.js tiling benchmark
 
+[![Build Status](https://travis-ci.org/mapbox/gdal-tiling-bench.svg?branch=master)](https://travis-ci.org/mapbox/gdal-tiling-bench)
+
 ### Setup
 
 To install files needed for the benchmark do:
