@@ -17,6 +17,7 @@ env:
 matrix:
   include:
      - env: TESTCASE='./testcases/90-50-7'
+     - env: TESTCASE='./testcases/90-50-7-tiled-lzw'
      - env: TESTCASE='./testcases/L7'
 
 before_install:
