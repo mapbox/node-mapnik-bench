@@ -76,8 +76,6 @@ if (mapnik_modules.length > 1) {
     process.exit(1);
 }
 
-console.log('Using mapnik at ' + mapnik_modules.join(''));
-
 File.registerProtocols(tilelive);
 Bridge.registerProtocols(tilelive);
 var source = 'bridge://'+xml_map_path;
@@ -141,6 +139,8 @@ tilelive.info(source, function(err, info) {
     options.bounds = argv.bounds || info.bounds;
     options.type = argv.scheme || 'pyramid';
     console.log('')
+    console.log('Config -> using node ' + process.version);
+    console.log('Config -> using mapnik at ' + mapnik_modules.join(''));
     console.log('Config -> source options:',JSON.stringify(options));
     console.log('Config -> threadpool size:',process.env.UV_THREADPOOL_SIZE);
     console.log('Config -> sink:',sink);
