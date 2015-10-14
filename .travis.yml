@@ -12,25 +12,21 @@ addons:
 env:
   global:
    - OPTIONS: "'--null-bridge --threadpool=8'"
-   - TESTCASE: './testcases/90-50-7'
+   - NODE_VERSION: "0.10"
 
 matrix:
   include:
-     - env: NODE_VERSION="4"
-     - env: NODE_VERSION="0.12"
-     - env: NODE_VERSION="0.10"
+     - env: TESTCASE='./testcases/90-50-7'
+     - env: TESTCASE='./testcases/L7'
 
 before_install:
  - source ./scripts/install_node.sh ${NODE_VERSION}
 
 install:
-- ./install.sh
+ - ./install.sh
 
 before_script:
-- ${TESTCASE}/setup.sh
+ - ${TESTCASE}/setup.sh
 
 script:
-- if [[ ${NODE_VERSION} != "4" ]]; then node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.2.0/; fi
-- node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
-- export GTIFF_DIRECT_IO=YES && node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
-- export GTIFF_DIRECT_IO=NO && export GTIFF_VIRTUAL_MEM_IO=YES && node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
+ - ./bench.sh
