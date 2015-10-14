@@ -9,22 +9,28 @@ addons:
     packages:
      - libstdc++6 # upgrade libstdc++ on linux to support C++11
 
+env:
+  global:
+   - OPTIONS: "--null-bridge --threadpool=8"
+   - TESTCASE: "./testcases/90-50-7"
+
+matrix:
+  include:
+     - env: NODE_VERSION="4"
+     - env: NODE_VERSION="0.12"
+     - env: NODE_VERSION="0.10"
+
 before_install:
-- echo $NODE_VERSION
-# upgrade nvm
-- rm -rf ~/.nvm/ && git clone --depth 1 https://github.com/creationix/nvm.git ~/.nvm
-- source ~/.nvm/nvm.sh
-- nvm install 0.10.40
-- nvm use 0.10.40
+ - source ./scripts/install_node.sh ${NODE_VERSION}
 
 install:
 - ./install.sh
 
 before_script:
-- ./testcases/90-50-7/setup.sh
+- ${TESTCASE}/setup.sh
 
 script:
-- node test.js testcases/90-50-7/map.xml mapnik-versions/v3.2.0/ --null-bridge --threadpool=8
-- node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/ --null-bridge --threadpool=8
-- export GTIFF_DIRECT_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/ --null-bridge --threadpool=8
-- export GTIFF_DIRECT_IO=NO && export GTIFF_VIRTUAL_MEM_IO=YES && node test.js testcases/90-50-7/map.xml mapnik-versions/v3.4.9/ --null-bridge --threadpool=8
+- node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.2.0/
+- node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
+- export GTIFF_DIRECT_IO=YES && node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
+- export GTIFF_DIRECT_IO=NO && export GTIFF_VIRTUAL_MEM_IO=YES && node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
