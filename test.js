@@ -67,6 +67,17 @@ if (argv['null-bridge']) {
     var Bridge = require(path.join(submodules_directory,'tilelive-bridge'));
 }
 
+var mapnik_modules = Object.keys(require.cache).filter(function(p) {
+    return (p.indexOf('mapnik.js') > -1);
+});
+
+if (mapnik_modules.length > 1) {
+    console.log('duplicate mapnik modules encountered',mapnik_modules);
+    process.exit(1);
+}
+
+console.log('Using mapnik at ' + mapnik_modules.join(''));
+
 File.registerProtocols(tilelive);
 Bridge.registerProtocols(tilelive);
 var source = 'bridge://'+xml_map_path;

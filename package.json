@@ -10,6 +10,7 @@
     "mkdirp": "0.5.1",
     "sphericalmercator": "1.0.3",
     "tilelive": "5.8.2",
-    "tilelive-file": "0.0.3"
+    "tilelive-file": "0.0.3",
+    "mapnik-pool": "0.1.1"
   }
 }
