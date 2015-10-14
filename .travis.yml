@@ -11,8 +11,8 @@ addons:
 
 env:
   global:
-   - OPTIONS: "--null-bridge --threadpool=8"
-   - TESTCASE: "./testcases/90-50-7"
+   - OPTIONS: '--null-bridge --threadpool=8'
+   - TESTCASE: './testcases/90-50-7'
 
 matrix:
   include:
