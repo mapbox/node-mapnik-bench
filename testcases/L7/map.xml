@@ -1,29 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE Map[]>
 <Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over" maximum-extent="-20037508.34,-20037508.34,20037508.34,20037508.34">
   <Parameters>
     <Parameter name="center">-121.28565466709543,48.85811234154681,6</Parameter>
     <Parameter name="bounds">-122.94668429835836,47.85129155929992,-119.6246250358325,49.86493312379369</Parameter>
     <Parameter name="format">webp</Parameter>
-    
     <Parameter name="maxzoom">12</Parameter>
     <Parameter name="minzoom">6</Parameter>
   </Parameters>
   
-  
-  <Style name="LE70460262003149EDC00-RGB" filter-mode="first">
+  <Style name="style">
     <Rule>
       <RasterSymbolizer opacity="1" scaling="bilinear" />
     </Rule>
   </Style>
   
-  <Layer name="LE70460262003149EDC00-RGB" buffer-size="0" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over">
-    <StyleName>LE70460262003149EDC00-RGB</StyleName>
+  <Layer name="layer" buffer-size="0" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over">
+    <StyleName>style</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
       <Parameter name="file">./LE70460262003149EDC00-RGB.tif</Parameter>
-      <Parameter name="layer">LE70460262003149EDC00-RGB</Parameter>
-      
     </Datasource>
   </Layer>
   
