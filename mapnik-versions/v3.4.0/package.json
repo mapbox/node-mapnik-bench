@@ -4,6 +4,6 @@
   "main": "package.json",
   "dependencies": {
     "mapnik": "3.4.0",
-    "tilelive-bridge":"git://github.com/mapbox/tilelive-bridge.git#mapnik-3.4.0"
+    "tilelive-bridge":"1.4.0"
   }
 }

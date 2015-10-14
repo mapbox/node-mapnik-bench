@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # install basic node deps
 npm install
 # remove the mapnik installed as a peer of mapnik-pool
