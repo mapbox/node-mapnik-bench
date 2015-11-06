@@ -11,14 +11,14 @@ addons:
 
 env:
   global:
-   - OPTIONS: "'--null-bridge --threadpool=8'"
    - NODE_VERSION: "0.10"
 
 matrix:
   include:
-     - env: TESTCASE='./testcases/90-50-7'
-     - env: TESTCASE='./testcases/90-50-7-tiled-lzw'
-     - env: TESTCASE='./testcases/L7'
+     - env: TESTCASE='./testcases/90-50-7' OPTIONS="'--null-bridge --threadpool=8'"
+     - env: TESTCASE='./testcases/90-50-7-tiled-lzw' OPTIONS="'--null-bridge --threadpool=8'"
+     - env: TESTCASE='./testcases/L7' OPTIONS="'--null-bridge --threadpool=8'"
+     - env: TESTCASE='./testcases/blank-compressed' OPTIONS="'--threadpool=8'"
 
 before_install:
  - source ./scripts/install_node.sh ${NODE_VERSION}
