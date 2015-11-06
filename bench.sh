@@ -18,6 +18,7 @@ node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
 export GTIFF_DIRECT_IO=YES
 node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
 
-export GTIFF_DIRECT_IO=NO
 export GTIFF_VIRTUAL_MEM_IO=YES
 node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
+
+node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/latest
