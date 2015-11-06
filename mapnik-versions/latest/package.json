@@ -4,6 +4,6 @@
   "main": "package.json",
   "dependencies": {
     "mapnik": "https://github.com/mapnik/node-mapnik/tarball/master",
-    "tilelive-bridge":"https://github.com/mapbox/tilelive-bridge/tarball/image-pool"
+    "tilelive-bridge":"https://github.com/mapbox/tilelive-bridge/tarball/master"
   }
 }
