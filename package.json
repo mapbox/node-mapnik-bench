@@ -9,8 +9,8 @@
     "minimist": "0.2.0",
     "mkdirp": "0.5.1",
     "sphericalmercator": "1.0.3",
-    "tilelive": "5.8.2",
+    "tilelive": "5.11.0",
     "tilelive-file": "0.0.3",
-    "mapnik-pool": "0.1.1"
+    "mapnik-pool": "0.1.2"
   }
 }
