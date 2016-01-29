@@ -1,1 +1,0 @@
-echo "point.geojson is included in this directory already"
