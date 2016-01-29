@@ -20,6 +20,7 @@ matrix:
      # - env: TESTCASE='./testcases/L7' OPTIONS="--null-bridge --threadpool=8"
      # - env: TESTCASE='./testcases/blank-compressed' OPTIONS="--threadpool=8"
      - env: TESTCASE='./testcases/geojson/points-1000' OPTIONS="--threadpool=8"
+     - env: TESTCASE='./testcases/geojson/polygons-us-counties-census' OPTIONS="--threadpool=8"
 
 before_install:
  - source ./scripts/install_node.sh ${NODE_VERSION}
