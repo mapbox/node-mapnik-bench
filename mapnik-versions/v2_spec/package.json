@@ -1,0 +1,9 @@
+{
+  "name": "gdal-tiling-bench-version",
+  "version": "1.0.0",
+  "main": "package.json",
+  "dependencies": {
+    "mapnik": "https://github.com/mapnik/node-mapnik/tarball/v2_spec",
+    "tilelive-bridge":"https://github.com/mapbox/tilelive-bridge/tarball/mapnik-v2_spec"
+  }
+}
