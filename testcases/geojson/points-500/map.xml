@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[]>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over" maximum-extent="-20037508.34,-20037508.34,20037508.34,20037508.34">
+  <Parameters>
+    <Parameter name="center">-0.13708305079489946,-0.24004377191886306,0</Parameter>
+    <Parameter name="bounds">-179.68707296065986,-89.93318575434387,179.41290685907006,89.45309821050614</Parameter>
+    <Parameter name="format">pbf</Parameter>
+    <Parameter name="json"><![CDATA[{"vector_layers":[{"id":"500-points","description":"","minzoom":0,"maxzoom":22,"fields":{}}]}]]></Parameter>
+    <Parameter name="maxzoom">4</Parameter>
+    <Parameter name="minzoom">0</Parameter>
+  </Parameters>
+  
+  
+  <Layer name="500-points" buffer-size="8" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
+    
+    <Datasource>
+      <Parameter name="type">geojson</Parameter>
+      <Parameter name="file">500-points.geojson</Parameter>
+      <Parameter name="layer">500-points</Parameter>
+      <Parameter name="cache_features">false</Parameter>
+    </Datasource>
+  </Layer>
+  
+</Map>
