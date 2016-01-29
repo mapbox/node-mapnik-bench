@@ -179,6 +179,7 @@ tilelive.info(source, function(err, info) {
             }
             clearInterval(memcheck);
             console.log('Test is done: process will exit once map pool is automatically reaped');
+            process.exit(0);
         }       
     });
 });
