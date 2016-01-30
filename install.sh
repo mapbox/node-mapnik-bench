@@ -4,8 +4,6 @@ set -e
 
 # install basic node deps
 npm install
-# remove the mapnik installed as a peer of mapnik-pool
-rm -rf node_modules/mapnik
 
 # now we install mapnik+tilelive-bridge+tilelive pairs that work(ed) together in the past
 # we're interested in when the mapnik version major or minor was bumped

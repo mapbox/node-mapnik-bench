@@ -11,6 +11,6 @@
     "sphericalmercator": "1.0.3",
     "tilelive": "5.11.0",
     "tilelive-file": "0.0.3",
-    "mapnik-pool": "0.1.2"
+    "mapnik-pool": "0.1.3"
   }
 }
