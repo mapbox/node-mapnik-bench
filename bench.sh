@@ -16,3 +16,5 @@ fi
 node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v3.4.9/
 
 node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/latest
+
+node test.js ${TESTCASE}/map.xml ${OPTIONS} mapnik-versions/v2_spec
