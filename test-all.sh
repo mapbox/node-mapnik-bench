@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 
+# this tests all geojson files against all mapnik versions specified
+
+# remove previous visual/data.json to make way for a new one
+DATA_FILE=visual/data.json
+rm -rf ${DATA_FILE}
+touch ${DATA_FILE}
+echo '{ "versions": {} }' >> ${DATA_FILE}
+
 TESTCASE=/Users/mapsam/mapbox/gdal-tiling-bench/testcases/geojson/*
 OPTIONS=${OPTIONS:="--threadpool=8"}
 
-for t in ${TESTCASE}
+for v in v2_spec latest
 do
-	if [ "${t}" != "/Users/mapsam/mapbox/gdal-tiling-bench/testcases/geojson/points-1000" ] ; then
-		# echo "Testing ${f##*/} against mapnik version ${v##*/}"
-		node test.js ${t}/map.xml ${OPTIONS} mapnik-versions/v2_spec --json
-	fi
+	for t in ${TESTCASE}
+	do
+		node test.js ${t}/map.xml ${OPTIONS} mapnik-versions/${v} --json
+	done
 done

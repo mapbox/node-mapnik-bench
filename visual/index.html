@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mapnik Bench</title>
+	<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+	<style>
+	body {
+		font-family: sans-serif;
+	}
+	table {
+		border-collapse: collapse;
+	}
+	table td,
+	table th {
+		border: 1px solid #c0c0c0;
+		padding: 10px;
+	}
+	th {
+		background: #f6f6f6;
+	}
+	.geom {
+		font-family: monospace;
+	}
+	</style>
+</head>
+<body>
+<div id="data"></div>
+
+<script>
+var geometries = [];
+var versions = [];
+var bench;
+// yay DOM strings :(
+
+$(document).ready(function(){
+	$.getJSON( "data.json", function( data ) {
+		console.log(data);
+		bench = data;
+
+		// for each version
+		for (var v in data.versions) {
+			var VERSION = data.versions[v];
+
+			// gather versions if we haven't pushed yet
+			if (versions.indexOf(v) == -1) versions.push(v);
+
+			// for each test in the version
+			for (var g in VERSION) {
+				var GEOM = VERSION[g];
+
+				// gather geometries if they haven't been added yet
+				if (geometries.indexOf(g) == -1) geometries.push(g); 
+
+
+			}
+		}
+
+		makeTheTable(geometries, versions);
+	});
+});
+
+function makeTheTable(g, v) {
+
+	// create headers
+	var header = '<tr><th>geom</th>';
+	var table = '<table>';
+	$.each(versions, function(v) {
+		header+='<th>'+versions[v]+'</th>';
+	});
+	header += '</tr>';
+	var rows = '';
+
+	// go through each geometry and get the version information for that geom
+	$.each(geometries, function(g) {
+		var row = '<tr><td class="geom">'+geometries[g]+'</td>';
+		$.each(versions, function(v) {
+			var time = Math.round(bench.versions[versions[v]][geometries[g]].result.time * 100) / 100;
+			row += '<td>'+time+'</td>';
+		});
+		row += '</tr>';
+		rows += row;
+	});
+
+	table += header + rows + '</table>';
+	document.getElementById('data').innerHTML = table;
+
+}
+</script>
+</body>
+</html>

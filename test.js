@@ -4,6 +4,7 @@ var mkdirp = require('mkdirp');
 var path = require('path');
 var fs = require('fs');
 var bytes = require('bytes');
+var fs = require('fs');
 
 function usage() {
     console.log([
@@ -33,7 +34,17 @@ if (argv._.length < 2) {
 }
 
 if (argv.json) {
-    var json = {};
+    var body,
+        json = {},
+        mapnik_version = null,
+        geom = null,
+        file = __dirname+'/visual/data.json';
+
+    // read visual/data.json to start appending
+    fs.readFile(file, function(err, res) {
+        if (err) throw err;
+        body = JSON.parse(res);
+    });
 }
 
 if (argv.threadpool) {
@@ -47,7 +58,7 @@ var xml_map_path = argv._[0];
 
 if (!fs.existsSync(xml_map_path)) {
     console.log('file does not exist',xml_map_path);
-    process.exit(1)
+    process.exit(1);
 }
 
 xml_map_path = path.resolve(xml_map_path);
@@ -135,8 +146,7 @@ if (argv.output) {
 
 tilelive.info(source, function(err, info) {
     if (err) {
-        // throw err;
-        console.log(err);
+        throw err;
     }
     var options = { close: true };
     if (argv.bounds) argv.bounds = argv.bounds.split(',').map(Number);
@@ -147,10 +157,20 @@ tilelive.info(source, function(err, info) {
 
     // add benchmark info to json if the object exists
     if (json) {
-        var urlarray = mapnik_modules.join('').split('/');
-        var mapnik_version = urlarray[urlarray.indexOf('mapnik-versions')+1];
-        json[mapnik_version] = {};
-        json[mapnik_version].config = {
+        var versionarray = mapnik_modules.join('').split('/');
+        var version = versionarray[versionarray.indexOf('mapnik-versions')+1];
+        mapnik_version = version;
+
+        // create version in body.versions if it doesn't exist
+        if (!body.versions[mapnik_version]) body.versions[mapnik_version] = {};
+
+        // create geometry object with current file
+        var geomarray = source.split('/');
+        geom = geomarray[geomarray.indexOf('map.xml')-1];
+        body.versions[mapnik_version][geom] = {};        
+
+        // start packing json to add as updated geometry file info
+        json.config = {
             mapnik_version: mapnik_version,
             node_version: process.version,
             source_options: options,
@@ -189,8 +209,7 @@ tilelive.info(source, function(err, info) {
     tilelive.copy(source, sink, options, function(err) {
         if (err) {
             console.log(err);
-            console.log("THERE WAS AN ERROR :(");
-            // process.exit(1);
+            process.exit(1);
         } else {
             var end = new Date().getTime() / 1000;
             var elapsed = end - start;
@@ -200,7 +219,7 @@ tilelive.info(source, function(err, info) {
             }
             if (tile_count > 0) {
                 if (json) {
-                    json[mapnik_version].result = {
+                    json.result = {
                         time: elapsed,
                         tiles_rendered: tile_count,
                         tiles_per_second: tile_count/elapsed,
@@ -218,6 +237,14 @@ tilelive.info(source, function(err, info) {
             clearInterval(memcheck);
             
         }       
-        if (json) console.log(json);
+
+        // if we are working with json, append this to the body data array
+        if (json) {
+            body.versions[mapnik_version][geom] = json;
+
+            fs.writeFile(file, JSON.stringify(body), function(err) {
+                if (err) throw err;
+            });
+        }
     });
 });

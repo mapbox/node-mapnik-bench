@@ -4,3 +4,4 @@ node.dtps
 *.geojson
 *.shp
 *.tif
+visual/data.json
