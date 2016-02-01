@@ -14,12 +14,21 @@
 	table th {
 		border: 1px solid #c0c0c0;
 		padding: 10px;
+		min-width: 100px;
 	}
 	th {
 		background: #f6f6f6;
 	}
-	.geom {
+	.geom,
+	.ver {
 		font-family: monospace;
+	}
+	.ver {}
+	.high {
+		background: #2ECC40;
+	}
+	.low {
+		background: #FF4136;
 	}
 	</style>
 </head>
@@ -65,7 +74,7 @@ function makeTheTable(g, v) {
 	var header = '<tr><th>geom</th>';
 	var table = '<table>';
 	$.each(versions, function(v) {
-		header+='<th>'+versions[v]+'</th>';
+		header+='<th class="ver">'+versions[v]+'</th>';
 	});
 	header += '</tr>';
 	var rows = '';
@@ -74,8 +83,11 @@ function makeTheTable(g, v) {
 	$.each(geometries, function(g) {
 		var row = '<tr><td class="geom">'+geometries[g]+'</td>';
 		$.each(versions, function(v) {
-			var time = Math.round(bench.versions[versions[v]][geometries[g]].result.time * 100) / 100;
-			row += '<td>'+time+'</td>';
+			var B = bench.versions[versions[v]][geometries[g]].result;
+			var time = Math.round(B.time * 100) / 100;
+			var tps = Math.round(B.tiles_per_second * 100) / 100;
+			var tpst = Math.round(B.tiles_per_second_per_thread * 100) / 100;
+			row += '<td><strong>'+time+'</strong> seconds<br><small><strong>'+B.tiles_rendered+'</strong> total tiles rendered<br><strong>'+tps+'</strong> TPS<br><strong>'+tpst+'</strong> TPS per thread</small></td>';
 		});
 		row += '</tr>';
 		rows += row;
@@ -83,6 +95,9 @@ function makeTheTable(g, v) {
 
 	table += header + rows + '</table>';
 	document.getElementById('data').innerHTML = table;
+}
+
+function minmax(array) {
 
 }
 </script>
