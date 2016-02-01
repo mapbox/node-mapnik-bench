@@ -19,7 +19,7 @@ function usage() {
         '  --minzoom=N',
         '  --maxzoom=N',       
         '  --bounds=minx,miny,maxx,maxy',
-        '  --write-to (write tiles to directory)',
+        '  --output (write tiles to directory)',
         '  --verbose (print tiles as they are finished rendering)'
         ].join('\n'));
     process.exit(1);
