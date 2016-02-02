@@ -4,9 +4,9 @@ var path = require('path');
 var fs = require('fs');
 var bytes = require('bytes');
 var fs = require('fs');
+var os = require('os');
 var argv = minimist(process.argv.slice(2));
-var noop = require('./src/NOOP');
-var NOOP = noop(argv);
+var NOOP = require('./src/NOOP')(argv);
 
 function usage() {
     console.log([
@@ -161,6 +161,7 @@ tilelive.load(urisrc, function(err, sourceInstance) {
         
         // add benchmark info to json if the object exists
         if (json) {
+
             var versionarray = mapnik_modules.join('').split('/');
             var version = versionarray[versionarray.indexOf('mapnik-versions')+1];
             mapnik_version = version;
@@ -171,7 +172,7 @@ tilelive.load(urisrc, function(err, sourceInstance) {
             // create geometry object with current file
             var geomarray = source.split('/');
             geom = geomarray[geomarray.indexOf('map.xml')-1];
-            body.versions[mapnik_version][geom] = {};        
+            body.versions[mapnik_version][geom] = {};
 
             // start packing json to add as updated geometry file info
             json.config = {
@@ -180,6 +181,12 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                 source_options: options,
                 threadpool_size: process.env.UV_THREADPOOL_SIZE,
                 sink: sink
+            };
+
+            json.os = { 
+                platform: os.platform(),
+                release: os.release(),
+                type: os.type()
             };
         } else {
             console.log('');
@@ -228,7 +235,7 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                     var end = new Date().getTime() / 1000;
                     var elapsed = end - start;
                     if (!json) {
-                        console.log('')
+                        console.log('');
                         console.log('Result -> elapsed time: ' + elapsed + 's');
                     }
                     if (tile_count > 0) {
@@ -241,16 +248,24 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                                 mem_rss: bytes(stats.max_rss),
                                 mem_heap: bytes(stats.max_heap)
                             };
+
+                            // write to file
+                            body.versions[mapnik_version][geom] = json;
+                            clearInterval(memcheck);
+                            fs.writeFile(file, JSON.stringify(body), function(err) {
+                                if (err) throw err;
+                                process.exit(0);
+                            });
                         } else {
                             console.log('Result -> total tiles rendered: ' + tile_count);
                             console.log('Result -> tiles per second: ' + tile_count/elapsed);
                             console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
-                            console.log('Test is done: process will exit once map pool is automatically reaped');
+                            clearInterval(memcheck);
+                            process.exit(0); // if profiling, we don't want to include the time it takes to reap the pool
                         }
                     }
-                    clearInterval(memcheck);
-                    process.exit(0); // if profiling, we don't want to include the time it takes to reap the pool
-                }       
+                    
+                } 
             });
         });
     });
