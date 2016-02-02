@@ -53,9 +53,7 @@
 			<div class="col2 pad1y"><strong>Type</strong><br><span class="env" id="ostype"></span></div>
 		</div>
 		<div id="data"></div>
-	</div>
-
-	
+	</div>	
 
 <script>
 var geometries = [];
@@ -65,7 +63,11 @@ var env = false;
 // yay DOM strings :(
 
 $(document).ready(function(){
-	$.getJSON( "data.json", function( data ) {
+
+	var file = window.location.search.replace('?', '');
+	console.log(file);
+
+	$.getJSON( 'https://s3.amazonaws.com/mapbox/playground/mapsam/'+file+'.json', function( data ) {
 		console.log(data);
 		bench = data;
 
