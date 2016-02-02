@@ -4,8 +4,6 @@ set -e
 
 # install basic node deps
 npm install
-# remove the mapnik installed as a peer of mapnik-pool
-rm -rf node_modules/mapnik
 
 # now we install mapnik+tilelive-bridge+tilelive pairs that work(ed) together in the past
 # we're interested in when the mapnik version major or minor was bumped
@@ -24,8 +22,11 @@ if [[ ${NODE_VERSION} != "4" ]]; then
     # https://github.com/mapbox/tilelive-bridge/blob/v1.4.1/package.json#L16
     #(cd mapnik-versions/v3.4.1 && npm install && npm ls mapnik tilelive-bridge)
 
-    (cd mapnik-versions/latest && npm install && npm ls mapnik tilelive-bridge)
 fi
 
 # https://github.com/mapbox/tilelive-bridge/blob/v2.1.0/package.json#L16
 (cd mapnik-versions/v3.4.9 && npm install && npm ls mapnik tilelive-bridge)
+
+(cd mapnik-versions/latest && npm install && npm ls mapnik tilelive-bridge)
+
+(cd mapnik-versions/v2_spec && npm install && npm ls mapnik tilelive-bridge)
