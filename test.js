@@ -4,7 +4,8 @@ var path = require('path');
 var fs = require('fs');
 var bytes = require('bytes');
 var fs = require('fs');
-var mercator = new(require('sphericalmercator'))();
+var argv = minimist(process.argv.slice(2));
+var NOOP = require('./src/NOOP')(argv);
 
 function usage() {
     console.log([
@@ -22,12 +23,10 @@ function usage() {
         '  --bounds=minx,miny,maxx,maxy',
         '  --write-to (write tiles to directory)',
         '  --verbose (print tiles as they are finished rendering)',
-        '  --json (outputs benchmark stats into a JSON file)'
+        '  --json (outputs benchmark stats into a timestamped JSON file)'
         ].join('\n'));
     process.exit(1);
 }
-
-var argv = minimist(process.argv.slice(2));
 
 if (argv._.length < 2) {
     return usage();
@@ -119,55 +118,16 @@ var source = 'bridge://'+xml_map_path;
 var sink;
 
 /*
- * Create a No Operation (NOOP) protocol for tilelive that mimicks the API
- * 
- * For the purpose of this benchmark suite we want to save time
- * by notsaving to file system so this removes a layer of 
- * complexity for benching unless you pass an output directory
+ * Set our file saving protocol based on user input
+ * Defaults to noop://
  */
 if (argv.output) {
     mkdirp.sync(argv.output);
     sink = 'file://' + path.join(__dirname,argv.output+'?filetype=webp');
 } else {
-    sink = 'noop://';
-
-    function NOOP(uri, callback) {
-        return callback(null,this);
-    }
-
-    var tile_count = 0;
-    NOOP.prototype.putTile = function(z, x, y, tile, callback) {
-        if (argv.verbose) {
-            var bbox = mercator.bbox(x,y,z, false, '900913');
-            console.log('no-op putTile',z,x,y,JSON.stringify(bbox));
-        }
-        tile_count++;
-        return callback(null);
-    };
-
-    NOOP.prototype.putInfo = function(info, callback) {
-        if (argv.verbose) {
-            console.log('no-op putInfo',info);
-        }
-        return callback(null);
-    };
-
-    NOOP.prototype.startWriting = function(callback) {
-        if (argv.verbose) {
-            console.log('no-op startWriting');
-        }
-        return callback(null);
-    };
-
-    NOOP.prototype.stopWriting = function(callback) {
-        if (argv.verbose) {
-            console.log('no-op stopWriting');
-        }
-        return callback(null);
-    };
-
-    // register NOOP into tilelive so we can use later
+    // add the NO OPeration protocol to tilelive so we can use it
     tilelive.protocols['noop:'] = NOOP;
+    sink = 'noop://';
 }
 
 var urisrc = tilelive.auto(source);
