@@ -1,3 +1,7 @@
 node_modules
 node.dtps
 .DS_Store
+*.geojson
+*.shp
+*.tif
+visual/*.json
