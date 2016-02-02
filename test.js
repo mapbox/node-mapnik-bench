@@ -179,7 +179,7 @@ var urisink = tilelive.auto(sink);
  * are located
  */
 tilelive.load(urisrc, function(err, sourceInstance) {
-    if (err) return next(err);
+    if (err) throw err;
 
     /*
      * Get metadata for the source of tiles, all generated from
@@ -187,56 +187,6 @@ tilelive.load(urisrc, function(err, sourceInstance) {
     */
     sourceInstance.getInfo(function(err, info) {
         if (err) {
-            console.log(err);
-            process.exit(1);
-        } else {
-            var end = new Date().getTime() / 1000;
-            var elapsed = end - start;
-            if (!json) {
-                console.log('')
-                console.log('Result -> elapsed time: ' + elapsed + 's');
-            }
-            if (tile_count > 0) {
-                if (json) {
-                    var versionarray = mapnik_modules.join('').split('/');
-                    var version = versionarray[versionarray.indexOf('mapnik-versions')+1];
-                    mapnik_version = version;
-
-                    // create version in body.versions if it doesn't exist
-                    if (!body.versions[mapnik_version]) body.versions[mapnik_version] = {};
-
-                    // create geometry object with current file
-                    var geomarray = source.split('/');
-                    geom = geomarray[geomarray.indexOf('map.xml')-1];
-                    body.versions[mapnik_version][geom] = {};        
-
-                    // start packing json to add as updated geometry file info
-                    json.config = {
-                        mapnik_version: mapnik_version,
-                        node_version: process.version,
-                        source_options: options,
-                        threadpool_size: process.env.UV_THREADPOOL_SIZE,
-                        sink: sink
-                    };
-                } else {
-                    console.log('Result -> total tiles rendered: ' + tile_count);
-                    console.log('Result -> tiles per second: ' + tile_count/elapsed);
-                    console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
-                    console.log('Test is done: process will exit once map pool is automatically reaped');
-                }
-            }
-            clearInterval(memcheck);
-            
-        }       
-
-        // if we are working with json, append this to the body data array
-        if (json) {
-            body.versions[mapnik_version][geom] = json;
-
-            fs.writeFile(file, JSON.stringify(body), function(err) {
-                if (err) throw err;
-            });
-        }
           throw err;
         }
 
@@ -247,12 +197,37 @@ tilelive.load(urisrc, function(err, sourceInstance) {
         options.maxzoom = argv.maxzoom || info.maxzoom;
         options.bounds = argv.bounds || info.bounds;
         options.type = argv.scheme || 'pyramid';
-        console.log('');
-        console.log('Config -> using node ' + process.version);
-        console.log('Config -> using mapnik at ' + mapnik_modules.join(''));
-        console.log('Config -> source options:',JSON.stringify(options));
-        console.log('Config -> threadpool size:',process.env.UV_THREADPOOL_SIZE);
-        console.log('Config -> sink:',sink);
+        
+        // add benchmark info to json if the object exists
+        if (json) {
+            var versionarray = mapnik_modules.join('').split('/');
+            var version = versionarray[versionarray.indexOf('mapnik-versions')+1];
+            mapnik_version = version;
+
+            // create version in body.versions if it doesn't exist
+            if (!body.versions[mapnik_version]) body.versions[mapnik_version] = {};
+
+            // create geometry object with current file
+            var geomarray = source.split('/');
+            geom = geomarray[geomarray.indexOf('map.xml')-1];
+            body.versions[mapnik_version][geom] = {};        
+
+            // start packing json to add as updated geometry file info
+            json.config = {
+                mapnik_version: mapnik_version,
+                node_version: process.version,
+                source_options: options,
+                threadpool_size: process.env.UV_THREADPOOL_SIZE,
+                sink: sink
+            };
+        } else {
+            console.log('');
+            console.log('Config -> using node ' + process.version);
+            console.log('Config -> using mapnik at ' + mapnik_modules.join(''));
+            console.log('Config -> source options:', JSON.stringify(options));
+            console.log('Config -> threadpool size:', process.env.UV_THREADPOOL_SIZE);
+            console.log('Config -> sink:', sink);
+        }
 
         var stats = {
             max_rss:0,
@@ -264,11 +239,13 @@ tilelive.load(urisrc, function(err, sourceInstance) {
             var mem = process.memoryUsage();
             if (mem.rss > stats.max_rss) stats.max_rss = mem.rss;
             if (mem.heapUsed > stats.max_heap) stats.max_heap = mem.heapUsed;
-            var line = 'Memory -> peak rss: ' + bytes(stats.max_rss) + ' / peak heap: ' + bytes(stats.max_heap);
-            if (process.platform === 'win32') {
-                process.stdout.write('\033[0G'+line);
-            } else {
-                process.stdout.write('\r'+line);
+            if (!json) {
+                var line = 'Memory -> peak rss: ' + bytes(stats.max_rss) + ' / peak heap: ' + bytes(stats.max_heap);
+                if (process.platform === 'win32') {
+                    process.stdout.write('\033[0G'+line);
+                } else {
+                    process.stdout.write('\r'+line);
+                }
             }
         },1000);
 
@@ -288,15 +265,28 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                 } else {
                     var end = new Date().getTime() / 1000;
                     var elapsed = end - start;
-                    console.log('');
-                    console.log('Result -> elapsed time: ' + elapsed + 's');
+                    if (!json) {
+                        console.log('')
+                        console.log('Result -> elapsed time: ' + elapsed + 's');
+                    }
                     if (tile_count > 0) {
-                        console.log('Result -> total tiles rendered: ' + tile_count);
-                        console.log('Result -> tiles per second: ' + tile_count/elapsed);
-                        console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
+                        if (json) {
+                            json.result = {
+                                time: elapsed,
+                                tiles_rendered: tile_count,
+                                tiles_per_second: tile_count/elapsed,
+                                tiles_per_second_per_thread: tile_count/elapsed/process.env.UV_THREADPOOL_SIZE,
+                                mem_rss: bytes(stats.max_rss),
+                                mem_heap: bytes(stats.max_heap)
+                            };
+                        } else {
+                            console.log('Result -> total tiles rendered: ' + tile_count);
+                            console.log('Result -> tiles per second: ' + tile_count/elapsed);
+                            console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
+                            console.log('Test is done: process will exit once map pool is automatically reaped');
+                        }
                     }
                     clearInterval(memcheck);
-                    console.log('Test is done: process will exit once map pool is automatically reaped');
                     process.exit(0); // if profiling, we don't want to include the time it takes to reap the pool
                 }       
             });
