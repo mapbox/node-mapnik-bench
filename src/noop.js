@@ -13,14 +13,14 @@ module.exports = function(args) {
 	    return callback(null,this);
 	}
 
-	global.tile_count = 0;
+	NOOP.tile_count = 0;
 	NOOP.prototype.putTile = function(z, x, y, tile, callback) {
 	    if (args.verbose) {
 	        var bbox = mercator.bbox(x,y,z, false, '900913');
 	        console.log('no-op putTile',z,x,y,JSON.stringify(bbox));
 	    }
-	    tile_count++;
-	    return callback(null, tile_count);
+	    NOOP.tile_count++;
+	    return callback(null);
 	};
 
 	NOOP.prototype.putInfo = function(info, callback) {

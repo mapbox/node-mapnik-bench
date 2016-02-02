@@ -5,7 +5,8 @@ var fs = require('fs');
 var bytes = require('bytes');
 var fs = require('fs');
 var argv = minimist(process.argv.slice(2));
-var NOOP = require('./src/NOOP')(argv);
+var noop = require('./src/NOOP');
+var NOOP = noop(argv);
 
 function usage() {
     console.log([
@@ -223,6 +224,7 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                     console.log(err);
                     process.exit(1);
                 } else {
+                    var tile_count = NOOP.tile_count;
                     var end = new Date().getTime() / 1000;
                     var elapsed = end - start;
                     if (!json) {
