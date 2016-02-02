@@ -6,7 +6,7 @@ var bytes = require('bytes');
 var fs = require('fs');
 var os = require('os');
 var argv = minimist(process.argv.slice(2));
-var NOOP = require('./src/NOOP')(argv);
+var NOOP = require('./src/noop')(argv);
 
 function usage() {
     console.log([
