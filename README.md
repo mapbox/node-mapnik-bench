@@ -1,5 +1,5 @@
 
-## GDAL / Node.js tiling benchmark
+## node-mapnik tiling benchmark
 
 [![Build Status](https://travis-ci.org/mapbox/node-mapnik-bench.svg?branch=master)](https://travis-ci.org/mapbox/node-mapnik-bench)
 
