@@ -230,6 +230,7 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                     console.log(err);
                     process.exit(1);
                 } else {
+                    clearInterval(memcheck);
                     var tile_count = NOOP.tile_count;
                     var end = new Date().getTime() / 1000;
                     var elapsed = end - start;
@@ -250,7 +251,6 @@ tilelive.load(urisrc, function(err, sourceInstance) {
 
                             // write to file
                             body.versions[mapnik_version][geom] = json;
-                            clearInterval(memcheck);
                             fs.writeFile(file, JSON.stringify(body), function(err) {
                                 if (err) throw err;
                                 process.exit(0);
@@ -259,7 +259,6 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                             console.log('Result -> total tiles rendered: ' + tile_count);
                             console.log('Result -> tiles per second: ' + tile_count/elapsed);
                             console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
-                            clearInterval(memcheck);
                             process.exit(0); // if profiling, we don't want to include the time it takes to reap the pool
                         }
                     }
