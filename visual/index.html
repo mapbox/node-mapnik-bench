@@ -63,10 +63,12 @@ var bench;
 
 $(document).ready(function(){
 
+	// var source = 'https://s3.amazonaws.com/mapbox/playground/mapsam/';
+	var source = 'http://localhost:8000/visual/';
 	var file = window.location.search.replace('?', '');
 	console.log(file);
 
-	$.getJSON( 'https://s3.amazonaws.com/mapbox/playground/mapsam/'+file+'.json', function( data ) {
+	$.getJSON( source+file+'.json', function( data ) {
 		console.log(data);
 		bench = data;
 

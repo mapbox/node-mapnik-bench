@@ -14,7 +14,7 @@ touch ${DATA_FILE}
 BODY="{ \"versions\": {}, \"date\": \"${DATE}\", \"platform\": \"${PLATFORM}\", \"release\": \"${RELEASE}\", \"architecture\": \"${ARCHITECTURE}\" }"
 echo ${BODY} >> ${DATA_FILE}
 
-TESTCASE=testcases/geojson/*
+TESTCASE=../node-mapnik-bench-testcases/geojson/*
 OPTIONS=${OPTIONS:="--threadpool=8"}
 
 for v in v2_spec latest v3.4.9 v3.4.0
@@ -26,3 +26,7 @@ do
 		FILE=${DATA_FILE} node test.js ${t}/map.xml ${OPTIONS} mapnik-versions/${v} --json
 	done
 done
+
+open http://localhost:8000/visual/?${DATE}
+
+python -m SimpleHTTPServer
