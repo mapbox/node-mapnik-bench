@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[]>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over" maximum-extent="-20037508.34,-20037508.34,20037508.34,20037508.34">
+  <Parameters>
+    <Parameter name="center">115.11978255553666,-8.033960313994982,6</Parameter>
+    <Parameter name="bounds">113.05727132050646,-9.072772782999465,117.18229379056686,-6.995147844990498</Parameter>
+    <Parameter name="format">pbf</Parameter>
+    <Parameter name="json"><![CDATA[{"vector_layers":[{"id":"bali_indonesia_places","description":"","minzoom":0,"maxzoom":22,"fields":{"id":"Number","name":"String","osm_id":"Number","population":"String","type":"String","z_order":"Number"}}]}]]></Parameter>
+    <Parameter name="maxzoom">12</Parameter>
+    <Parameter name="minzoom">6</Parameter>
+  </Parameters>
+  
+  
+  <Layer name="bali_indonesia_places" buffer-size="8" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
+    
+    <Datasource>
+      <Parameter name="type">geojson</Parameter>
+      <Parameter name="file">bali_indonesia_places.geojson</Parameter>
+      <Parameter name="layer">bali_indonesia_places</Parameter>
+      <Parameter name="cache_features">false</Parameter>
+    </Datasource>
+  </Layer>
+  
+</Map>
+
