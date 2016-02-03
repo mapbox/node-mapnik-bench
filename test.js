@@ -36,13 +36,14 @@ if (argv._.length < 2) {
 /*
  * Grab data.json file to prepare for writing out data
  * only if `--json` flag is passed
+ * process.env.FILE is loaded from test-all.sh as a parameter for creating the file
  */
-if (argv.json) {
+if (argv.json && process.env.FILE) {
     var body,
         json = {},
         mapnik_version = null,
         geom = null,
-        file = __dirname+'/visual/data.json';
+        file = __dirname+'/'+process.env.FILE;
 
     // read visual/data.json to start appending
     fs.readFile(file, function(err, res) {
@@ -181,12 +182,6 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                 source_options: options,
                 threadpool_size: process.env.UV_THREADPOOL_SIZE,
                 sink: sink
-            };
-
-            json.os = { 
-                platform: os.platform(),
-                release: os.release(),
-                type: os.type()
             };
         } else {
             console.log('');

@@ -46,11 +46,11 @@
 <body class="fill-navy">
 	
 	<div class="container col12 clearfix">
-		<h1>Tuesday, Feb 2 at 12:27pm</h1>
+		<h1 id="time">TIME</h1>
 		<div class="col12">
 			<div class="col2 pad1y"><strong>Platform</strong><br><span class="env" id="platform"></span></div>
 			<div class="col2 pad1y"><strong>Release</strong><br><span class="env" id="release"></span></div>
-			<div class="col2 pad1y"><strong>Type</strong><br><span class="env" id="ostype"></span></div>
+			<div class="col2 pad1y"><strong>Architecture</strong><br><span class="env" id="arch"></span></div>
 		</div>
 		<div id="data"></div>
 	</div>	
@@ -59,7 +59,6 @@
 var geometries = [];
 var versions = [];
 var bench;
-var env = false;
 // yay DOM strings :(
 
 $(document).ready(function(){
@@ -71,6 +70,15 @@ $(document).ready(function(){
 		console.log(data);
 		bench = data;
 
+		// set time test was run
+		var date = niceTime(new Date(bench.date*1000));
+		$('#time').text(date);
+
+		// set environment info
+		$('#platform').text(bench.platform);
+		$('#release').text(bench.release);
+		$('#arch').text(bench.architecture);
+
 		// for each version
 		for (var v in data.versions) {
 			var VERSION = data.versions[v];
@@ -81,15 +89,6 @@ $(document).ready(function(){
 			// for each test in the version
 			for (var g in VERSION) {
 				var GEOM = VERSION[g];
-
-				// if no env set, set that
-				// tood, put ENV information at the root of benchmark object
-				if (!env) {
-					$('#platform').text(GEOM.os.platform);
-					$('#release').text(GEOM.os.release);
-					$('#ostype').text(GEOM.os.type);
-					env = true;
-				}
 
 				// gather geometries if they haven't been added yet
 				if (geometries.indexOf(g) == -1) geometries.push(g); 
@@ -131,8 +130,17 @@ function makeTheTable(g, v) {
 	document.getElementById('data').innerHTML = table;
 }
 
-function minmax(array) {
+function niceTime(d) {
+	var minutes = "0" + d.getMinutes();
+	var seconds = "0" + d.getSeconds();
+	var formattedTime = getMonth(d) + ' ' + d.getDate() + ', ' + d.getFullYear() + ' (' + d.getHours() + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) + ')';
+	return formattedTime;
+}
 
+function getMonth(d) {
+	var month = d.getMonth();
+	var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+	return months[month];
 }
 </script>
 </body>
