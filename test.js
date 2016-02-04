@@ -194,16 +194,20 @@ tilelive.load(urisrc, function(err, sourceInstance) {
 
         var stats = {
             max_rss:0,
-            max_heap:0
+            max_heap:0,
+            max_heap_total:0
         };
 
         // gives us a snapshot of what the peak usage was during the tilelive.copy process
         var memcheck = setInterval(function() {
             var mem = process.memoryUsage();
             if (mem.rss > stats.max_rss) stats.max_rss = mem.rss;
+            if (mem.heapTotal > stats.max_heap_total) stats.max_heap_total = mem.heapTotal;
             if (mem.heapUsed > stats.max_heap) stats.max_heap = mem.heapUsed;
             if (!json) {
-                var line = 'Memory -> peak rss: ' + bytes(stats.max_rss) + ' / peak heap: ' + bytes(stats.max_heap);
+                var line = 'Memory -> peak/current rss: ' + bytes(stats.max_rss) + '/' + bytes(mem.rss) +
+                     ' / heap used: ' + bytes(stats.max_heap) + '/' + bytes(mem.heapUsed) +
+                     ' / heap total: ' + bytes(stats.max_heap_total) + '/' + bytes(mem.heapTotal) + ' ';
                 if (process.platform === 'win32') {
                     process.stdout.write('\033[0G'+line);
                 } else {
@@ -226,6 +230,7 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                     console.log(err);
                     process.exit(1);
                 } else {
+                    clearInterval(memcheck);
                     var tile_count = NOOP.tile_count;
                     var end = new Date().getTime() / 1000;
                     var elapsed = end - start;
@@ -246,7 +251,6 @@ tilelive.load(urisrc, function(err, sourceInstance) {
 
                             // write to file
                             body.versions[mapnik_version][geom] = json;
-                            clearInterval(memcheck);
                             fs.writeFile(file, JSON.stringify(body), function(err) {
                                 if (err) throw err;
                                 process.exit(0);
@@ -255,7 +259,6 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                             console.log('Result -> total tiles rendered: ' + tile_count);
                             console.log('Result -> tiles per second: ' + tile_count/elapsed);
                             console.log('Result -> tiles per second per thread: ' + tile_count/elapsed/process.env.UV_THREADPOOL_SIZE);
-                            clearInterval(memcheck);
                             process.exit(0); // if profiling, we don't want to include the time it takes to reap the pool
                         }
                     }
