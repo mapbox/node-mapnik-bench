@@ -253,7 +253,6 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                             body.versions[mapnik_version][geom] = json;
                             fs.writeFile(file, JSON.stringify(body), function(err) {
                                 if (err) throw err;
-                                process.exit(0);
                             });
                         } else {
                             console.log('Result -> total tiles rendered: ' + tile_count);
@@ -262,7 +261,6 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                             process.exit(0); // if profiling, we don't want to include the time it takes to reap the pool
                         }
                     }
-                    
                 } 
             });
         });
