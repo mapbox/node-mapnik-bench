@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[]>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over" maximum-extent="-20037508.34,-20037508.34,20037508.34,20037508.34">
+  <Parameters>
+    <Parameter name="center">-82.00968993449996,27.27211597450005,7</Parameter>
+    <Parameter name="bounds">-87.51838629999997,23.817943984000063,-76.50099356899995,30.726287965000036</Parameter>
+    <Parameter name="format">pbf</Parameter>
+    <Parameter name="json"><![CDATA[{"vector_layers":[{"id":"26MB-with-index","description":"","minzoom":0,"maxzoom":22,"fields":{"SITE_ID":"String","SITE_NAME":"String","COUNTRY":"String","STATE":"String","MANAGING_A":"String","COASTLINE_":"Number","SEASON":"String","EFFECTIVE_":"String","EFFECTI_01":"String","DISCHARGE_":"Number","REMOVAL_OF":"Number","SPEED_REST":"Number","ENTRY_PROH":"Number","BOTTOM_TRA":"Number","DIVING_PRO":"Number","REMOVAL_01":"Number","STOPPING_P":"Number","ANCHORING_":"Number","LANDING_PR":"Number","DRAGGING_P":"Number","DREDGING_P":"Number","INDUSTRIAL":"Number","CONSTRUCTI":"Number","DRILLING_P":"Number","OVERFLIGHT":"Number","LAST_UPDAT":"String","S57_CAT":"Number"}}]}]]></Parameter>
+    <Parameter name="maxzoom">13</Parameter>
+    <Parameter name="minzoom">7</Parameter>
+  </Parameters>
+  
+  
+  <Layer name="26MB-with-index" buffer-size="8" srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs">
+    
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">26MB-with-index/26MB-with-index.shp</Parameter>
+      <Parameter name="layer">26MB-with-index</Parameter>
+      
+    </Datasource>
+  </Layer>
+  
+</Map>

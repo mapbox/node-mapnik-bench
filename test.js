@@ -197,7 +197,7 @@ tilelive.load(urisrc, function(err, sourceInstance) {
             max_heap:0,
             max_heap_total:0
         };
-
+        var memstart = process.memoryUsage();
         // gives us a snapshot of what the peak usage was during the tilelive.copy process
         var memcheck = setInterval(function() {
             var mem = process.memoryUsage();
@@ -246,7 +246,8 @@ tilelive.load(urisrc, function(err, sourceInstance) {
                                 tiles_per_second: tile_count/elapsed,
                                 tiles_per_second_per_thread: tile_count/elapsed/process.env.UV_THREADPOOL_SIZE,
                                 mem_rss: bytes(stats.max_rss),
-                                mem_heap: bytes(stats.max_heap)
+                                mem_heap: bytes(stats.max_heap),
+                                total_mem_rss: bytes(stats.max_rss - memstart.rss)
                             };
 
                             // write to file
