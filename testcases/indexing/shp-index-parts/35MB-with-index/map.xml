@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[]>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over" maximum-extent="-20037508.34,-20037508.34,20037508.34,20037508.34">
+  <Parameters>
+    <Parameter name="center">-105.09933520949991,54.500036626500076,6</Parameter>
+    <Parameter name="bounds">-121.21217707899991,48.999999993000074,-88.98649333999992,60.000073260000086</Parameter>
+    <Parameter name="format">pbf</Parameter>
+    <Parameter name="json"><![CDATA[{"vector_layers":[{"id":"35MB-with-index","description":"","minzoom":0,"maxzoom":22,"fields":{"CSDUID":"String","CSDNAME":"String","CSDTYPE":"String","PRUID":"String","PRNAME":"String","CDUID":"String","CDNAME":"String","CDTYPE":"String","CMAUID":"String","CMANAME":"String","CMATYPE":"String","CMAPUID":"String","SACTYPE":"String","SACCODE":"String","ERUID":"String","ERNAME":"String","CCSUID":"String","CCSNAME":"String"}}]}]]></Parameter>
+    <Parameter name="maxzoom">12</Parameter>
+    <Parameter name="minzoom">6</Parameter>
+  </Parameters>
+  
+  
+  <Layer name="35MB-with-index" buffer-size="8" srs="+proj=longlat +ellps=GRS80 +no_defs">
+    
+    <Datasource>
+      <Parameter name="type">shape</Parameter>
+      <Parameter name="file">35MB-with-index/35MB-with-index.shp</Parameter>
+      <Parameter name="layer">35MB-with-index</Parameter>
+      
+    </Datasource>
+  </Layer>
+  
+</Map>
