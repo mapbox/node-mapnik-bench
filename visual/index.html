@@ -63,10 +63,13 @@ var bench;
 
 $(document).ready(function(){
 
+	// var source = 'https://s3.amazonaws.com/mapbox/playground/mapsam/';
+	var source = 'http://localhost:8000/visual/';
 	var file = window.location.search.replace('?', '');
+	file = '1454716008';
 	console.log(file);
 
-	$.getJSON( 'https://s3.amazonaws.com/mapbox/playground/mapsam/'+file+'.json', function( data ) {
+	$.getJSON( source+file+'.json', function( data ) {
 		console.log(data);
 		bench = data;
 
@@ -116,11 +119,20 @@ function makeTheTable(g, v) {
 	$.each(geometries, function(g) {
 		var row = '<tr><td class="geom">'+geometries[g]+'</td>';
 		$.each(versions, function(v) {
-			var B = bench.versions[versions[v]][geometries[g]].result;
-			var time = Math.round(B.time * 1000) / 1000;
-			var tps = Math.round(B.tiles_per_second * 1000) / 1000;
-			var tpst = Math.round(B.tiles_per_second_per_thread * 1000) / 1000;
-			row += '<td><strong>'+time+'</strong> seconds<br><small><strong>'+B.tiles_rendered+'</strong> total tiles rendered<br><strong>'+tps+'</strong> TPS<br><strong>'+tpst+'</strong> TPS per thread</small></td>';
+			// ummm yuck
+			if (bench.versions &&
+				bench.versions[versions[v]] &&
+				bench.versions[versions[v]][geometries[g]] &&
+				bench.versions[versions[v]][geometries[g]].result) {
+
+				var B = bench.versions[versions[v]][geometries[g]].result;
+				var time = Math.round(B.time * 1000) / 1000;
+				var tps = Math.round(B.tiles_per_second * 1000) / 1000;
+				var tpst = Math.round(B.tiles_per_second_per_thread * 1000) / 1000;
+
+				row += '<td><strong>'+time+'</strong> seconds<br><small><strong>'+B.tiles_rendered+'</strong> total tiles rendered<br><strong>'+tps+'</strong> TPS<br><strong>'+tpst+'</strong> TPS per thread</small></td>';
+				row += '<td><strong>'+B.total_mem_rss+'</strong> Total memory used<br><small><strong>'+B.mem_rss+'</strong> Peak Memory RSS<br><strong>'+B.mem_heap+'</strong> Peak Memory heap</small></td>';
+			}
 		});
 		row += '</tr>';
 		rows += row;
