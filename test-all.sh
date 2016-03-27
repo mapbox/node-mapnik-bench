@@ -14,10 +14,10 @@ touch ${DATA_FILE}
 BODY="{ \"versions\": {}, \"date\": \"${DATE}\", \"platform\": \"${PLATFORM}\", \"release\": \"${RELEASE}\", \"architecture\": \"${ARCHITECTURE}\" }"
 echo ${BODY} >> ${DATA_FILE}
 
-TESTCASE=testcases/geojson/*
+TESTCASE=../node-mapnik-bench-testcases/geojson/*
 OPTIONS=${OPTIONS:="--threadpool=8"}
 
-for v in v2_spec latest v3.4.9 v3.4.0
+for v in latest v3.5.0
 do
 	echo "RUNNING ${v}"
 	for t in ${TESTCASE}

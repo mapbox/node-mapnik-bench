@@ -7,7 +7,7 @@
  */
 var mercator = new(require('sphericalmercator'))();
 
-module.exports = function(args) {
+module.exports = function(options) {
 	
 	function NOOP(uri, callback) {
 	    return callback(null,this);
@@ -15,27 +15,27 @@ module.exports = function(args) {
 
 	NOOP.tile_count = 0;
 	NOOP.prototype.putTile = function(z, x, y, tile, callback) {
-	    if (args.verbose) {
-	        var bbox = mercator.bbox(x,y,z, false, '900913');
-	        console.log('no-op putTile',z,x,y,JSON.stringify(bbox));
-	    }
-	    NOOP.tile_count++;
-	    return callback(null);
+    if (options.verbose) {
+      var bbox = mercator.bbox(x,y,z, false, '900913');
+      console.log('no-op putTile',z,x,y,JSON.stringify(bbox));
+    }
+    NOOP.tile_count++;
+    return callback(null);
 	};
 
 	NOOP.prototype.putInfo = function(info, callback) {
-	    if (args.verbose) console.log('no-op putInfo',info);
-	    return callback(null);
+    if (options.verbose) console.log('no-op putInfo',info);
+    return callback(null);
 	};
 
 	NOOP.prototype.startWriting = function(callback) {
-	    if (args.verbose) console.log('no-op startWriting');
-	    return callback(null);
+    if (options.verbose) console.log('no-op startWriting');
+    return callback(null);
 	};
 
 	NOOP.prototype.stopWriting = function(callback) {
-	    if (args.verbose) console.log('no-op stopWriting');
-	    return callback(null);
+    if (options.verbose) console.log('no-op stopWriting');
+    return callback(null);
 	};
 
 	return NOOP;

@@ -1,16 +1,21 @@
 {
   "name": "gdal-tiling-bench",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Benchmark tiling a geotiff with node.js -> mapnik -> gdal",
   "main": "index.js",
   "author": "Mapbox",
   "dependencies": {
     "bytes": "^2.1.0",
+    "mapnik-omnivore": "^7.3.0",
     "mapnik-pool": "0.1.3",
     "minimist": "0.2.0",
     "mkdirp": "0.5.1",
     "sphericalmercator": "1.0.3",
     "tilelive": "~5.12.0",
-    "tilelive-file": "0.0.3"
+    "tilelive-file": "0.0.3",
+    "tilelive-omnivore": "^2.2.0"
+  },
+  "bin": {
+    "bench": "./bin/bench.js"
   }
 }
