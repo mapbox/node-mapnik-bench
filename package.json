@@ -17,5 +17,12 @@
   },
   "bin": {
     "bench": "./bin/bench.js"
+  },
+  "scripts": {
+    "test": "tape test/geojson.test.js | tap-spec"
+  },
+  "devDependencies": {
+    "tap-spec": "^4.1.1",
+    "tape": "^4.5.1"
   }
 }

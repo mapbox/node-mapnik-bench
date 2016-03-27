@@ -2,18 +2,19 @@
 
 'use strict';
 
-var bench = require('../src/index.js');
+var bench = require('../lib/index.js');
 var fs = require('fs');
 var fixtures = require('../testcases/index.js');
 var argv = require('minimist')(process.argv.slice(2));
 var usage = fs.readFileSync(__dirname+ '/usage').toString();
 
-console.log(argv);
-
 // usage
-if (argv._.length < 2) console.log(usage);
+if (argv._.length < 1) console.log(usage);
 
 // test source for fixture first, then file path
+if (argv.source && fixtures[argv.source]) {
+  console.log(fixtures);
+}
 var source = (fixtures[argv._[0]]) ? fixtures[argv._[0]] : argv._[0];
 // use version specified, or default to latest
 var version = (argv._[1]) ? argv._[1] : 'latest';
@@ -30,5 +31,6 @@ bench(source, version, opts, function(err, stats) {
   // report back based on "save" or "console"
   // probably best to default to console
 
-  console.log('complete!', stats);
+  console.log(stats);
+  process.exit(0);
 });

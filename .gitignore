@@ -1,7 +1,8 @@
 node_modules
+npm-debug.log
 node.dtps
 .DS_Store
-*.geojson
-*.shp
-*.tif
+testcases/geojson/
+testcases/shapefile/
+testcases/tif/
 visual/*.json
