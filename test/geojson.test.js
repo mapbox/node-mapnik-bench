@@ -25,10 +25,3 @@ test('geojson: input data does not exist', function(assert) {
     assert.end();
   });
 });
-
-// test('geojson: input data does not exist', function(assert) {
-//   bench('/not/a/fixture', 'v3.5.0', options, function(err, stats) {
-//     assert.ok(err, 'source file does not exist');
-//     assert.end();
-//   });
-// });

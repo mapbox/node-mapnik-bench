@@ -16,7 +16,8 @@
     "tilelive-omnivore": "^2.2.0"
   },
   "bin": {
-    "bench": "./bin/bench.js"
+    "bench": "./bin/bench.js",
+    "benchall": "./bin/benchall.js"
   },
   "scripts": {
     "test": "tape test/geojson.test.js | tap-spec"

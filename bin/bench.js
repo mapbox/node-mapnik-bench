@@ -11,26 +11,33 @@ var usage = fs.readFileSync(__dirname+ '/usage').toString();
 // usage
 if (argv._.length < 1) console.log(usage);
 
-// test source for fixture first, then file path
-if (argv.source && fixtures[argv.source]) {
-  console.log(fixtures);
+var source = argv._[0];
+if (!fs.existsSync(source)) {
+  exit(source + ' does not exist!', 1);
 }
-var source = (fixtures[argv._[0]]) ? fixtures[argv._[0]] : argv._[0];
-// use version specified, or default to latest
+
 var version = (argv._[1]) ? argv._[1] : 'latest';
+if (!fs.existsSync('./mapnik-versions/' + version + '/') &&
+    !fs.existsSync('./mapnik-versions/' + version + '/node_modules/')) {
+  exit(version + ' does not exist or has not been setup. Run npm install in that directory.', 1);
+}
 
 var opts = {};
 if (argv.threadpool) opts.threadpool = argv.threadpool;
+if (argv.minzoom) opts.minzoom = argv.minzoom;
+if (argv.maxzoom) opts.maxzoom = argv.maxzoom;
+if (argv.bounds) opts.bounds = argv.bounds;
+if (argv.scheme) opts.scheme = argv.scheme;
 
 bench(source, version, opts, function(err, stats) {
-  if (err) {
-    console.log(err);
-    process.exit(1);
-  }
+  if (err) exit(err, 1);
 
   // report back based on "save" or "console"
   // probably best to default to console
-
-  console.log(stats);
-  process.exit(0);
+  exit(stats, 0);
 });
+
+function exit(message, code) {
+  console.log(message);
+  process.exit(code);
+}
