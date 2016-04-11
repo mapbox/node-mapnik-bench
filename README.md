@@ -25,10 +25,10 @@ cd mapnik-versions/<version>
 npm install
 ```
 
-To install files needed for the benchmark do:
+To install files needed for the benchmark (this takes a little while):
 
 ```sh
-./scripts/install.sh
+node scripts/download.js
 ```
 
 ## Usage
@@ -99,6 +99,10 @@ bench('./test/fixtures/us-counties-polygons.geojson', 'latest', options, functio
   console.log(stats); // same as JSON from ./bin/bench above
 });
 ```
+
+## Testcases
+
+In order to test an entire suite of files against multiple versions of Node Mapnik, they must be structured in a particlar manner. Check out the [`testcases`](https://github.com/mapbox/node-mapnik-bench/tree/master/testcases) directory to get started.
 
 ## Test
 

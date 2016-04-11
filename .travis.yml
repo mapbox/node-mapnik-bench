@@ -17,7 +17,8 @@ before_install:
  - source ./scripts/install_node.sh ${NODE_VERSION}
 
 install:
- - ./scripts/install.sh
+ - npm install
+ - (cd mapnik-packaging/latest && npm install)
 
 script:
  - npm test
