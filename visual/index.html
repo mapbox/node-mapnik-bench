@@ -8,21 +8,21 @@
 
 	body {
 		font-family: sans-serif;
-		color: #f8f8f8;
+		color: #404040;
 	}
 	table {
 		border-collapse: collapse;
-		background: #eee;
+		background: #fff;
 		color: #222b30;
 	}
 	table td,
 	table th {
-		border: 1px solid #222b30;
+		border: 1px solid #eee;
 		padding: 10px;
 		min-width: 100px;
 	}
 	th {
-		background: #222b30;
+		background: #404040;
 		color: #eee;
 	}
 	.container {
@@ -41,9 +41,15 @@
 	.low {
 		background: #FF4136;
 	}
+	.quickest {
+		background: #cce9d9;
+	}
+	.right {
+		float: right;
+	}
 	</style>
 </head>
-<body class="fill-navy">
+<body class="fill-grey">
 	
 	<div class="container col12 clearfix">
 		<h1 id="time">TIME</h1>
@@ -56,78 +62,74 @@
 	</div>	
 
 <script>
-var geometries = [];
-var versions = [];
 var bench;
-// yay DOM strings :(
-
+var winners = [];
 $(document).ready(function(){
 
 	var file = window.location.search.replace('?', '');
-	console.log(file);
 
-	$.getJSON( 'https://s3.amazonaws.com/mapbox/playground/mapsam/'+file+'.json', function( data ) {
+	$.getJSON('https://s3.amazonaws.com/mapbox/node-mapnik-bench/data/'+file+'.json', function(data) {
 		console.log(data);
 		bench = data;
 
 		// set time test was run
-		var date = niceTime(new Date(bench.date*1000));
+		var date = niceTime(new Date(bench.date));
 		$('#time').text(date);
 
 		// set environment info
-		$('#platform').text(bench.platform);
-		$('#release').text(bench.release);
-		$('#arch').text(bench.architecture);
+		$('#platform').text(bench.os.platform);
+		$('#release').text(bench.os.release);
+		$('#arch').text(bench.os.architecture);		
 
-		// for each version
-		for (var v in data.versions) {
-			var VERSION = data.versions[v];
-
-			// gather versions if we haven't pushed yet
-			if (versions.indexOf(v) == -1) versions.push(v);
-
-			// for each test in the version
-			for (var g in VERSION) {
-				var GEOM = VERSION[g];
-
-				// gather geometries if they haven't been added yet
-				if (geometries.indexOf(g) == -1) geometries.push(g); 
-
-
-			}
-		}
-
-		makeTheTable(geometries, versions);
+		table();
 	});
 });
 
-function makeTheTable(g, v) {
+function table() {
 
 	// create headers
 	var header = '<tr><th>Input file</th>';
-	var table = '<table>';
-	$.each(versions, function(v) {
-		header+='<th class="ver">'+versions[v]+'</th>';
+	var table = '<table class="fill-white">';
+	$.each(bench.versions, function(v) {
+		header+='<th class="ver">'+bench.versions[v]+'</th>';
 	});
 	header += '</tr>';
+	table += header;
+
 	var rows = '';
 
 	// go through each geometry and get the version information for that geom
-	$.each(geometries, function(g) {
-		var row = '<tr><td class="geom">'+geometries[g]+'</td>';
-		$.each(versions, function(v) {
-			var B = bench.versions[versions[v]][geometries[g]].result;
-			var time = Math.round(B.time * 1000) / 1000;
-			var tps = Math.round(B.tiles_per_second * 1000) / 1000;
-			var tpst = Math.round(B.tiles_per_second_per_thread * 1000) / 1000;
-			row += '<td><strong>'+time+'</strong> seconds<br><small><strong>'+B.tiles_rendered+'</strong> total tiles rendered<br><strong>'+tps+'</strong> TPS<br><strong>'+tpst+'</strong> TPS per thread</small></td>';
+	$.each(bench.fixtures, function(g) {
+		var row = '<tr><td class="geom">'+bench.fixtures[g].name+'</td>';
+		
+		var fastest = Infinity;
+
+		// each version gets a <td>
+		$.each(bench.fixtures[g].results, function(r) {
+			var result = bench.fixtures[g].results[r];
+			var elapsed = result.time.copy - result.time.load;
+			fastest = (elapsed < fastest) ? elapsed : fastest;
+			var tdv = '<td id="'+elapsed+'">';
+			tdv += 'Copy time (seconds): <span class="right"><strong>'+getTime(result.time.load, result.time.copy)+'</strong></span><br>';
+			tdv += 'Tiles/sec: <span class="right">'+round(result.tile_count / getTime(result.time.load, result.time.copy))+'</span><br>';
+			tdv += 'Tiles/sec/thread ('+result.options.threadpool+'): <span class="right">'+round((result.tile_count / getTime(result.time.load, result.time.copy)) / result.options.threadpool) +'</span><br>';
+			tdv += '</td>';
+			row += tdv;
 		});
+
+		// add fastest to proper ID
+		winners.push(fastest);
 		row += '</tr>';
 		rows += row;
 	});
+	table += rows;
+	table += '</table>';
+	$('#data').html(table);
 
-	table += header + rows + '</table>';
-	document.getElementById('data').innerHTML = table;
+	// add quickest class to fastest version per fixture
+	$.each(winners, function(w) {
+		$('#'+winners[w]).addClass('quickest');
+	});
 }
 
 function niceTime(d) {
@@ -141,6 +143,15 @@ function getMonth(d) {
 	var month = d.getMonth();
 	var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 	return months[month];
+}
+
+function getTime(start, end) {
+	var t = (end - start) / 1000;
+	return t;
+}
+
+function round(num) {
+	return Math.round(num * 100) / 100;
 }
 </script>
 </body>

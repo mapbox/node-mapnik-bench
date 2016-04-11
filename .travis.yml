@@ -13,26 +13,12 @@ env:
   global:
    - NODE_VERSION: "0.10"
 
-matrix:
-  include:
-     # - env: TESTCASE='./testcases/tif/90-50-7' OPTIONS="--null-bridge --threadpool=8"
-     # - env: TESTCASE='./testcases/tif/90-50-7-tiled-lzw' OPTIONS="--null-bridge --threadpool=8"
-     # - env: TESTCASE='./testcases/tif/L7' OPTIONS="--null-bridge --threadpool=8"
-     # - env: TESTCASE='./testcases/tif/blank-compressed' OPTIONS="--threadpool=8"
-     # - env: TESTCASE='./testcases/geojson/points-1000' OPTIONS="--threadpool=8"
-     # - env: TESTCASE='./testcases/geojson/polygons-us-counties-census' OPTIONS="--threadpool=8"
-     # - env: TESTCASE='./testcases/geojson/points-osm-extracts' OPTIONS="--threadpool=8"
-     # - env: TESTCASE='./testcases/geojson/lines-osm-extracts' OPTIONS="--threadpool=8"
-     - env: TESTCASE='./testcases/geojson/polygon-osm-extract' OPTIONS="--threadpool=8"
-
 before_install:
  - source ./scripts/install_node.sh ${NODE_VERSION}
 
 install:
- - ./install.sh
-
-before_script:
- - ${TESTCASE}/setup.sh
+ - npm install
+ - (cd mapnik-versions/latest && npm install)
 
 script:
- - ./bench.sh
+ - npm test

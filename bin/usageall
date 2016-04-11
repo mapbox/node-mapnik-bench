@@ -1,0 +1,9 @@
+
+Runs benchmark against a testcase group defined in /testcases/index.js (or a custom location)
+and saves to a timestamped .json file for visualizing in /visual/index.html
+
+usage:
+  benchall <testcase module> <testcase group> <mapnik-versions>
+
+examples:
+  benchall testcases/index.js geojson v3.5.0 v3.4.16 latest

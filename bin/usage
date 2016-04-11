@@ -1,0 +1,17 @@
+
+usage:
+  bench <file> <mapnik-version>
+
+examples:
+  Test a single file with a single mapnik version:
+    bench ./path/to/file.geojson 3.5.0
+
+options:
+  --null-bridge
+  --threadpool=N
+  --minzoom=N
+  --maxzoom=N
+  --bounds=minx,miny,maxx,maxy
+  --write-to (write tiles to directory)
+  --verbose (print tiles as they are finished rendering)
+  --json (outputs benchmark stats into a timestamped JSON file)
