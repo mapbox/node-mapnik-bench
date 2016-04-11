@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/mapbox/node-mapnik-bench.svg?branch=master)](https://travis-ci.org/mapbox/node-mapnik-bench)
 
+**node-mapnik-bench** is a set of scripts used for testing performance between versions of Node Mapnik.
+
+![screenshot](visual/screenshot.png)
+
 ## Setup
 
 This will install some basic node.js deps into `./node_modules` and it will install node-mapnik binaries + related tilelive modules into the `./mapnik-versions` directory.
@@ -103,6 +107,10 @@ bench('./test/fixtures/us-counties-polygons.geojson', 'latest', options, functio
 ## Testcases
 
 In order to test an entire suite of files against multiple versions of Node Mapnik, they must be structured in a particlar manner. Check out the [`testcases`](https://github.com/mapbox/node-mapnik-bench/tree/master/testcases) directory to get started.
+
+#### Add a new testcase
+
+TODO
 
 ## Test
 
