@@ -18,7 +18,7 @@ before_install:
 
 install:
  - npm install
- - (cd mapnik-packaging/latest && npm install)
+ - (cd mapnik-versions/latest && npm install)
 
 script:
  - npm test
