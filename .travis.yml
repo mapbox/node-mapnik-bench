@@ -13,10 +13,6 @@ env:
   global:
    - NODE_VERSION: "0.10"
 
-matrix:
-  include:
-     - env: TESTCASE='./test/fixtures/us-counties-polygon.geojson' OPTIONS="--threadpool=8"
-
 before_install:
  - source ./scripts/install_node.sh ${NODE_VERSION}
 
@@ -25,4 +21,3 @@ install:
 
 script:
  - npm test
- - ./bin/bench.js ${TESTCASE} latest ${OPTIONS}
