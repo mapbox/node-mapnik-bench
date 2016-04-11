@@ -20,7 +20,7 @@
     "benchall": "./bin/benchall.js"
   },
   "scripts": {
-    "test": "tape test/geojson.test.js | tap-spec"
+    "test": "tape test/test.js"
   },
   "devDependencies": {
     "tap-spec": "^4.1.1",
