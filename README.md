@@ -112,6 +112,26 @@ In order to test an entire suite of files against multiple versions of Node Mapn
 
 TODO
 
+## Mapnik versions
+
+All of the mapnik versions we test are in the `mapnik-versions` directory. **To add a new version** you can create a new directory named after the tag, branch, or gitsha you would like to use. The name of the directory is the name you'll use in the benchmark commands.
+
+Add a `package.json` with the proper pointers - here is what `latest` looks like:
+
+```JSON
+{
+  "name": "gdal-tiling-bench-version",
+  "version": "1.0.0",
+  "main": "package.json",
+  "dependencies": {
+    "mapnik": "https://github.com/mapnik/node-mapnik/tarball/master",
+    "tilelive-bridge":"https://github.com/mapbox/tilelive-bridge/tarball/master"
+  }
+}
+```
+
+Once added, you can `npm install` in that new directory.
+
 ## Test
 
 ```
