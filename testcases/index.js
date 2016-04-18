@@ -1,5 +1,4 @@
 var path = require('path');
-var bucket = '/mapbox/playground/mapsam/data/';
 
 module.exports = {
   geojson: [
