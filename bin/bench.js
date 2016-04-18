@@ -9,7 +9,10 @@ var argv = require('minimist')(process.argv.slice(2));
 var usage = fs.readFileSync(__dirname+ '/usage').toString();
 
 // usage
-if (argv._.length < 1) console.log(usage);
+if (argv._.length < 1) {
+    console.log(usage);
+    process.exit(-1);
+}
 
 var source = argv._[0];
 if (!fs.existsSync(source)) {
