@@ -1,7 +1,7 @@
 {
-  "name": "gdal-tiling-bench",
+  "name": "node-mapnik-bench",
   "version": "2.0.0",
-  "description": "Benchmark tiling a geotiff with node.js -> mapnik -> gdal",
+  "description": "Benchmark rendering tiles with a given node-mapnik version",
   "main": "index.js",
   "author": "Mapbox",
   "dependencies": {
