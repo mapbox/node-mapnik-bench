@@ -22,7 +22,6 @@
     "test": "tape test/test.js"
   },
   "devDependencies": {
-    "aws-sdk": "^2.3.3",
     "tap-spec": "^4.1.1",
     "tape": "^4.5.1"
   }
