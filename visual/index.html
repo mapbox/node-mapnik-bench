@@ -68,22 +68,32 @@ $(document).ready(function(){
 
 	var file = window.location.search.replace('?', '');
 
-	$.getJSON('https://s3.amazonaws.com/mapbox/node-mapnik-bench/data/'+file+'.json', function(data) {
-		console.log(data);
-		bench = data;
+	$.getJSON(file+'.json')
+		.done(function(data) { handleResponse(data); })
+		.error(function(err) {
+			$.getJSON('https://s3.amazonaws.com/mapbox/node-mapnik-bench/data/'+file+'.json')
+				.done(function(data) { handleResponse(data); })
+				.error(function(err) {
+					console.error('Could not find ' + file + '.json on your computer or on s3');
+				});
+		});
 
-		// set time test was run
-		var date = niceTime(new Date(bench.date));
-		$('#time').text(date);
-
-		// set environment info
-		$('#platform').text(bench.os.platform);
-		$('#release').text(bench.os.release);
-		$('#arch').text(bench.os.architecture);		
-
-		table();
-	});
 });
+
+function handleResponse(data) {
+	bench = data;
+
+	// set time test was run
+	var date = niceTime(new Date(bench.date));
+	$('#time').text(date);
+
+	// set environment info
+	$('#platform').text(bench.os.platform);
+	$('#release').text(bench.os.release);
+	$('#arch').text(bench.os.architecture);		
+
+	table();
+}
 
 function table() {
 
