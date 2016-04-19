@@ -2,10 +2,30 @@
 
 'use strict';
 
+var argv = require('minimist')(process.argv.slice(2));
+
+/* Set the node.js threadpool
+ *
+ * It is important that we set this before any async work is triggered as
+ * my understanding (dane) is that the value is cached once the threadpool
+ * is created inside node
+ *
+ * the size defaults to 4, which is quite small and we can get better performance if we
+ * bump it up to something default or 1.5 times the CPU power on your machine
+ *
+ * recording threadpool size is important because it can have drastic
+ * effects on the benchmark output
+ */
+if (args.threadpool) {
+  process.env.UV_THREADPOOL_SIZE = args.threadpool;
+} else {
+  var size = Math.ceil(Math.max(4, os.cpus().length * 1.5));
+  process.env.UV_THREADPOOL_SIZE = size;
+}
+
 var bench = require('../lib/index.js');
 var fs = require('fs');
 var fixtures = require('../testcases/index.js');
-var argv = require('minimist')(process.argv.slice(2));
 var usage = fs.readFileSync(__dirname+ '/usage').toString();
 
 // usage
