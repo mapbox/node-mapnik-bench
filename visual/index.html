@@ -1,56 +1,67 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Mapnik Bench</title>
 	<link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
 	<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 	<style>
+		body {
+			font-family: sans-serif;
+			color: #404040;
+		}
 
-	body {
-		font-family: sans-serif;
-		color: #404040;
-	}
-	table {
-		border-collapse: collapse;
-		background: #fff;
-		color: #222b30;
-	}
-	table td,
-	table th {
-		border: 1px solid #eee;
-		padding: 10px;
-		min-width: 100px;
-	}
-	th {
-		background: #404040;
-		color: #eee;
-	}
-	.container {
-		width: 80%;
-		margin: 2em auto;
-	}
-	.geom,
-	.ver,
-	.env {
-		font-family: monospace;
-	}
-	.ver {}
-	.high {
-		background: #2ECC40;
-	}
-	.low {
-		background: #FF4136;
-	}
-	.quickest {
-		background: #cce9d9;
-	}
-	.right {
-		float: right;
-	}
+		table {
+			border-collapse: collapse;
+			background: #fff;
+			color: #222b30;
+		}
+
+		table td,
+		table th {
+			border: 1px solid #eee;
+			padding: 10px;
+			min-width: 100px;
+		}
+
+		th {
+			background: #404040;
+			color: #eee;
+		}
+
+		.container {
+			width: 80%;
+			margin: 2em auto;
+		}
+
+		.geom,
+		.ver,
+		.env {
+			font-family: monospace;
+		}
+
+		.ver {}
+
+		.high {
+			background: #2ECC40;
+		}
+
+		.low {
+			background: #FF4136;
+		}
+
+		.quickest {
+			background: #cce9d9;
+		}
+
+		.right {
+			float: right;
+		}
 	</style>
 </head>
+
 <body class="fill-grey">
-	
+
 	<div class="container col12 clearfix">
 		<h1 id="time">TIME</h1>
 		<div class="col12">
@@ -59,10 +70,10 @@
 			<div class="col2 pad1y"><strong>Architecture</strong><br><span class="env" id="arch"></span></div>
 		</div>
 		<div id="data"></div>
-	</div>	
+	</div>
 
-<script>
-var bench;
+	<script>
+		var bench;
 var winners = [];
 $(document).ready(function(){
 
@@ -90,7 +101,7 @@ function handleResponse(data) {
 	// set environment info
 	$('#platform').text(bench.os.platform);
 	$('#release').text(bench.os.release);
-	$('#arch').text(bench.os.architecture);		
+	$('#arch').text(bench.os.architecture);
 
 	table();
 }
@@ -111,7 +122,7 @@ function table() {
 	// go through each geometry and get the version information for that geom
 	$.each(bench.fixtures, function(g) {
 		var row = '<tr><td class="geom">'+bench.fixtures[g].name+'</td>';
-		
+
 		var fastest = Infinity;
 
 		// each version gets a <td>
@@ -123,6 +134,9 @@ function table() {
 			tdv += 'Copy time (seconds): <span class="right"><strong>'+getTime(result.time.load, result.time.copy)+'</strong></span><br>';
 			tdv += 'Tiles/sec: <span class="right">'+round(result.tile_count / getTime(result.time.load, result.time.copy))+'</span><br>';
 			tdv += 'Tiles/sec/thread ('+result.options.threadpool+'): <span class="right">'+round((result.tile_count / getTime(result.time.load, result.time.copy)) / result.options.threadpool) +'</span><br>';
+			if(result.options.minzoom && result.options.maxzoom){
+				tdv += 'minzoom:<span class="right">' + result.options.minzoom + '</span><br>maxzoom:<span class="right">' + result.options.maxzoom + '</span><br />';
+			}
 			tdv += '</td>';
 			row += tdv;
 		});
@@ -163,6 +177,7 @@ function getTime(start, end) {
 function round(num) {
 	return Math.round(num * 100) / 100;
 }
-</script>
+	</script>
 </body>
+
 </html>
