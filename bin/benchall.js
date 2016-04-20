@@ -2,7 +2,12 @@
 
 'use strict';
 
+var bench = require('../lib/index.js');
 var argv = require('minimist')(process.argv.slice(2));
+var fs = require('fs');
+var usage = fs.readFileSync(__dirname+ '/usageall').toString();
+var path = require('path');
+var os = require('os');
 
 /* Set the node.js threadpool
  *
@@ -16,19 +21,12 @@ var argv = require('minimist')(process.argv.slice(2));
  * recording threadpool size is important because it can have drastic
  * effects on the benchmark output
  */
-if (args.threadpool) {
-  process.env.UV_THREADPOOL_SIZE = args.threadpool;
+if (argv.threadpool) {
+  process.env.UV_THREADPOOL_SIZE = argv.threadpool;
 } else {
   var size = Math.ceil(Math.max(4, os.cpus().length * 1.5));
   process.env.UV_THREADPOOL_SIZE = size;
 }
-
-var bench = require('../lib/index.js');
-var fs = require('fs');
-
-var usage = fs.readFileSync(__dirname+ '/usageall').toString();
-var path = require('path');
-var os = require('os');
 
 // usage
 if (argv._.length < 1) console.log(usage);
