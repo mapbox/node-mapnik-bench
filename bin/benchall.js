@@ -2,12 +2,12 @@
 
 'use strict';
 
-var bench = require('../lib/index.js');
 var argv = require('minimist')(process.argv.slice(2));
 var fs = require('fs');
 var usage = fs.readFileSync(__dirname+ '/usageall').toString();
 var path = require('path');
 var os = require('os');
+var cp = require('child_process');
 
 /* Set the node.js threadpool
  *
@@ -60,10 +60,10 @@ var data = {
 var vcount = 0;
 var fixturecount = 0;
 
-bench(group[fixturecount].path, versions[vcount], {}, endBench);
+// TODO expose options as command line params
+execute(group[fixturecount].path, versions[vcount], {}, endBench);
 function endBench(err, stats) {
   if (err) throw err;
-  console.log(group[fixturecount].name, versions[vcount]);
 
   // create fixture object
   if (!data.fixtures[group[fixturecount].name]) {
@@ -75,7 +75,7 @@ function endBench(err, stats) {
   data.fixtures[group[fixturecount].name].results.push(stats);
   fixturecount++;
   try {
-    bench(group[fixturecount].path, versions[vcount], {}, endBench);
+    execute(group[fixturecount].path, versions[vcount], {}, endBench);
   } catch (e) {
     
     data.versions.push(versions[vcount]);
@@ -85,8 +85,24 @@ function endBench(err, stats) {
     
     // otherwise reset fixtures, bump version, bench again
     fixturecount = 0;
-    bench(group[fixturecount].path, versions[vcount], {}, endBench);
+    execute(group[fixturecount].path, versions[vcount], {}, endBench);
   }
+}
+
+// executes bench.js in it's own shell, avoiding mapnik dupes
+function execute(file, version, options, callback) {
+  console.log(version + ': ' + file);
+  var args = [
+    path.join(__dirname,'bench.js'),
+    path.resolve(group[fixturecount].path),
+    versions[vcount]
+  ];
+  cp.execFile(process.execPath, args, options, function(err, stdout, stderr) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, JSON.parse(stdout));
+  });
 }
 
 function finish() {
