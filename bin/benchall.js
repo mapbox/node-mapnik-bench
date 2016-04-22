@@ -69,7 +69,7 @@ if (argv['null-bridge']) opts['null-bridge'] = argv['null-bridge'];
 if (argv['write-to']) opts['write-to'] = argv['write-to'];
 if (argv['write-to']) opts.output = argv['write-to'];
 if (argv.verbose) opts.verbose = argv.verbose;
-
+if (argv.concurrency) opts.concurrency = argv.concurrency;
 
 // loop through each fixture, testing each version of mapnik
 var vcount = 0;
