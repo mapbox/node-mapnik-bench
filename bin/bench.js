@@ -61,6 +61,6 @@ bench(source, version, opts, function(err, stats) {
 });
 
 function exit(message, code) {
-  console.log(message);
+  console.log(JSON.stringify(message));
   process.exit(code);
 }
