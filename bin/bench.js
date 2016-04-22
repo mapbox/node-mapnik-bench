@@ -26,6 +26,7 @@ if (argv.threadpool) {
 } else {
   var size = Math.ceil(Math.max(4, os.cpus().length * 1.5));
   process.env.UV_THREADPOOL_SIZE = size;
+  argv.threadpool = size;
 }
 
 // usage

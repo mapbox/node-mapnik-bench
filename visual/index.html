@@ -3,11 +3,12 @@
 <head>
 	<title>Mapnik Bench</title>
 	<link href='https://www.mapbox.com/base/latest/base.css' rel='stylesheet' />
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
 	<style>
 
 	body {
-		font-family: sans-serif;
+		font-family: monospace;
 		color: #404040;
 	}
 	table {
@@ -17,13 +18,39 @@
 	}
 	table td,
 	table th {
-		border: 1px solid #eee;
-		padding: 10px;
+		/*border: 1px solid #eee;*/
+		/*padding: 10px;*/
 		min-width: 100px;
 	}
-	th {
+	table th {
 		background: #404040;
 		color: #eee;
+		padding: 2px 10px;
+		border-left: 1px solid #eee;
+	}
+	tr {
+		border-bottom: 1px solid #999;
+	}
+	table td {
+		padding: 0;
+		position: relative;
+		border: none;
+		border-left: 1px solid #eee;
+		font-size: 0.9em;
+	}
+	table td:after {
+		font-family: "FontAwesome";
+		position: absolute;
+		top: 2px;
+		right: 4px;
+		font-size: 1em;
+	}
+	td span {
+		display: block;
+		padding: 2px 5px;
+	}
+	td span:nth-child(2n) {
+		background: #f6f6f6;
 	}
 	.container {
 		width: 80%;
@@ -35,17 +62,27 @@
 		font-family: monospace;
 	}
 	.ver {}
-	.high {
-		background: #2ECC40;
+/*	.high {
+		border:2px solid #2ECC40;
 	}
 	.low {
-		background: #FF4136;
+		border:2px solid #FF4136;
 	}
 	.quickest {
-		background: #cce9d9;
+		border:2px solid #cce9d9;
+	}*/
+	.quickest:after {
+		content:"\f058";
+		color: #2ECC40;
 	}
 	.right {
 		float: right;
+	}
+	.toc {
+		white-space: nowrap;
+	}
+	.strong {
+		font-weight: 900;
 	}
 	</style>
 </head>
@@ -95,10 +132,12 @@ function handleResponse(data) {
 	table();
 }
 
+var toctd = '<td class="toc"><span>Copy time (seconds)</span><span>Tiles/sec</span><span>Tiles/sec/thread</span></td>';
+
 function table() {
 
 	// create headers
-	var header = '<tr><th>Input file</th>';
+	var header = '<tr class="headers"><th>Input file</th><th></th>';
 	var table = '<table class="fill-white">';
 	$.each(bench.versions, function(v) {
 		header+='<th class="ver">'+bench.versions[v]+'</th>';
@@ -110,7 +149,7 @@ function table() {
 
 	// go through each geometry and get the version information for that geom
 	$.each(bench.fixtures, function(g) {
-		var row = '<tr><td class="geom">'+bench.fixtures[g].name+'</td>';
+		var row = '<tr><td class="geom pad1x">'+bench.fixtures[g].name+'</td>'+toctd;
 		
 		var fastest = Infinity;
 
@@ -120,9 +159,9 @@ function table() {
 			var elapsed = result.time.copy - result.time.load;
 			fastest = (elapsed < fastest) ? elapsed : fastest;
 			var tdv = '<td id="'+elapsed+'">';
-			tdv += 'Copy time (seconds): <span class="right"><strong>'+getTime(result.time.load, result.time.copy)+'</strong></span><br>';
-			tdv += 'Tiles/sec: <span class="right">'+round(result.tile_count / getTime(result.time.load, result.time.copy))+'</span><br>';
-			tdv += 'Tiles/sec/thread ('+result.options.threadpool+'): <span class="right">'+round((result.tile_count / getTime(result.time.load, result.time.copy)) / result.options.threadpool) +'</span><br>';
+			tdv += '<span class="strong">'+getTime(result.time.load, result.time.copy)+'</span>';
+			tdv += '<span>'+round(result.tile_count / getTime(result.time.load, result.time.copy))+'</span>';
+			tdv += '<span>'+round((result.tile_count / getTime(result.time.load, result.time.copy)) / result.options.threadpool) +'('+result.options.threadpool+' threads)</span>';
 			tdv += '</td>';
 			row += tdv;
 		});
