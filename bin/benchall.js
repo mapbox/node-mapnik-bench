@@ -4,6 +4,11 @@
 
 var os = require('os');
 var argv = require('minimist')(process.argv.slice(2));
+var fs = require('fs');
+var usage = fs.readFileSync(__dirname+ '/usageall').toString();
+var path = require('path');
+var os = require('os');
+var cp = require('child_process');
 
 /* Set the node.js threadpool
  *
@@ -24,6 +29,7 @@ if (argv.threadpool) {
   process.env.UV_THREADPOOL_SIZE = size;
 }
 
+<<<<<<< HEAD
 var bench = require('../lib/index.js');
 var fs = require('fs');
 
@@ -31,6 +37,8 @@ var usage = fs.readFileSync(__dirname + '/usageall').toString();
 var path = require('path');
 var os = require('os');
 
+=======
+>>>>>>> 921dad326d4e706836549b9cf00023636227e99a
 // usage
 if (argv._.length < 1) console.log(usage);
 
@@ -75,10 +83,14 @@ if (argv.concurrency) opts.concurrency = argv.concurrency;
 var vcount = 0;
 var fixturecount = 0;
 
+<<<<<<< HEAD
 bench(group[fixturecount].path, versions[vcount], opts, endBench);
+=======
+// TODO expose options as command line params
+execute(group[fixturecount].path, versions[vcount], {}, endBench);
+>>>>>>> 921dad326d4e706836549b9cf00023636227e99a
 function endBench(err, stats) {
   if (err) throw err;
-  console.log(group[fixturecount].name, versions[vcount]);
 
   // create fixture object
   if (!data.fixtures[group[fixturecount].name]) {
@@ -90,7 +102,11 @@ function endBench(err, stats) {
   data.fixtures[group[fixturecount].name].results.push(stats);
   fixturecount++;
   try {
+<<<<<<< HEAD
     bench(group[fixturecount].path, versions[vcount], opts, endBench);
+=======
+    execute(group[fixturecount].path, versions[vcount], {}, endBench);
+>>>>>>> 921dad326d4e706836549b9cf00023636227e99a
   } catch (e) {
 
     data.versions.push(versions[vcount]);
@@ -100,8 +116,28 @@ function endBench(err, stats) {
 
     // otherwise reset fixtures, bump version, bench again
     fixturecount = 0;
+<<<<<<< HEAD
     bench(group[fixturecount].path, versions[vcount], opts, endBench);
+=======
+    execute(group[fixturecount].path, versions[vcount], {}, endBench);
+>>>>>>> 921dad326d4e706836549b9cf00023636227e99a
   }
+}
+
+// executes bench.js in it's own shell, avoiding mapnik dupes
+function execute(file, version, options, callback) {
+  console.log(version + ': ' + file);
+  var args = [
+    path.join(__dirname,'bench.js'),
+    path.resolve(group[fixturecount].path),
+    versions[vcount]
+  ];
+  cp.execFile(process.execPath, args, options, function(err, stdout, stderr) {
+    if (err) {
+      return callback(err);
+    }
+    callback(null, JSON.parse(stdout));
+  });
 }
 
 function finish() {
